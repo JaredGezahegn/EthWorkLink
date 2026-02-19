@@ -2,10 +2,10 @@ import { Link } from "@/components/link";
 import { UserSearch, Building2 } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 
 export default function RegisterTypePage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div className="flex min-h-screen flex-col">

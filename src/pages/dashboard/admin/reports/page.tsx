@@ -1,4 +1,4 @@
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { Users, Building2, Wrench, Briefcase, TrendingUp, TrendingDown } from "lucide-react";
 
 const metrics = [
@@ -26,7 +26,7 @@ const topCities = [
 ];
 
 export default function AdminReportsPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div>

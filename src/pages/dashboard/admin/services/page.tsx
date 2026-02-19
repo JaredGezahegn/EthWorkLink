@@ -1,9 +1,9 @@
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { StarRating } from "@/components/star-rating";
 import { serviceListings } from "@/lib/data";
 
 export default function AdminServicesPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div>

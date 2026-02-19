@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { StarRating } from "@/components/star-rating";
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { serviceListings, locations } from "@/lib/data";
 import { MapPin, Building2 } from "lucide-react";
 
 const categories = ["All", "Electrician", "Plumbing", "Construction", "IT Services", "Cleaning", "Tutoring"];
 
 export default function ServicesPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
   const [category, setCategory] = useState("All");
   const [location, setLocation] = useState("All");
   const [minRating, setMinRating] = useState(0);

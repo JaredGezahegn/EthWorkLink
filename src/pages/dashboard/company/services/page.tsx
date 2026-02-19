@@ -1,4 +1,4 @@
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { Pencil, Trash2 } from "lucide-react";
 
 const services = [
@@ -8,7 +8,7 @@ const services = [
 ];
 
 export default function CompanyServicesPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div>

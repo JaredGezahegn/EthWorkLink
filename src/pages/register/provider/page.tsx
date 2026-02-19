@@ -2,12 +2,12 @@ import { Link } from "@/components/link";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { locations, serviceCategories } from "@/lib/data";
 import type { TranslationKey } from "@/lib/translations";
 
 export default function ProviderRegistrationPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
   const navigate = useNavigate();
 
   const handleRegister = () => {

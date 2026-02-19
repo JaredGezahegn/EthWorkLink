@@ -1,9 +1,9 @@
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { StatusBadge } from "@/components/status-badge";
 import { companyServiceRequests } from "@/lib/data";
 
 export default function CompanyRequestsPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div>

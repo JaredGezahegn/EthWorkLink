@@ -1,10 +1,10 @@
 import { Search, MapPin } from "lucide-react";
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { locations } from "@/lib/data";
 import { AnimatedBackground } from "./animated-background";
 
 export function HeroSection() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <section className="relative overflow-hidden px-4 py-20 lg:py-28">

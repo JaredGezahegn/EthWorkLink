@@ -1,11 +1,11 @@
 import { Link } from "@/components/link";
 import { MapPin } from "lucide-react";
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { StarRating } from "@/components/star-rating";
 import { featuredCompanies } from "@/lib/data";
 
 export function FeaturedSection() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <section className="bg-muted px-4 py-16 lg:py-20">

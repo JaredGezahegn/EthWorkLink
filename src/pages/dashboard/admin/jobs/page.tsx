@@ -1,8 +1,8 @@
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { jobListings } from "@/lib/data";
 
 export default function AdminJobsPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div>

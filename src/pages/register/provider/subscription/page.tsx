@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Check, Zap, Crown, Sparkles } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import type { TranslationKey } from "@/lib/translations";
 
 interface Plan {
@@ -82,7 +82,7 @@ const plans: Plan[] = [
 ];
 
 export default function SubscriptionPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
   const [selectedPlan, setSelectedPlan] = useState<string>("sixMonth");
 
   return (

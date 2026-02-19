@@ -1,5 +1,5 @@
 import { Zap, Droplets, HardHat, Monitor, Sparkles, GraduationCap } from "lucide-react";
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { serviceCategories } from "@/lib/data";
 import type { TranslationKey } from "@/lib/translations";
 
@@ -13,7 +13,7 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 export function CategoriesSection() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <section className="px-4 py-16 lg:py-20">

@@ -1,11 +1,11 @@
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { jobListings } from "@/lib/data";
 import { MapPin, Building2, Banknote } from "lucide-react";
 
 export default function JobsPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div className="flex min-h-screen flex-col">

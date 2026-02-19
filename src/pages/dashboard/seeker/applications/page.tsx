@@ -1,9 +1,9 @@
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { StatusBadge } from "@/components/status-badge";
 import { seekerApplications } from "@/lib/data";
 
 export default function SeekerApplicationsPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div>

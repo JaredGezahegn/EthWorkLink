@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
-import { LanguageProvider } from '@/lib/language-context'
+import { AppProvider } from '@/contexts/app-context'
+import { ProtectedRoute } from '@/components/protected-route'
 
 // Layouts
 import SeekerDashboardLayout from '@/pages/dashboard/seeker/layout'
@@ -45,7 +46,7 @@ import DashboardAdminUsersPage from '@/pages/dashboard/admin/users/page'
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <LanguageProvider>
+      <AppProvider>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
@@ -58,31 +59,31 @@ function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/company/:id" element={<CompanyDetailPage />} />
 
-          {/* Dashboard - Seeker */}
-          <Route path="/dashboard/seeker" element={<SeekerDashboardLayout><DashboardSeekerPage /></SeekerDashboardLayout>} />
-          <Route path="/dashboard/seeker/applications" element={<SeekerDashboardLayout><DashboardSeekerApplicationsPage /></SeekerDashboardLayout>} />
-          <Route path="/dashboard/seeker/profile" element={<SeekerDashboardLayout><DashboardSeekerProfilePage /></SeekerDashboardLayout>} />
-          <Route path="/dashboard/seeker/reviews" element={<SeekerDashboardLayout><DashboardSeekerReviewsPage /></SeekerDashboardLayout>} />
+          {/* Dashboard - Seeker (Protected) */}
+          <Route path="/dashboard/seeker" element={<ProtectedRoute allowedRoles={['seeker']}><SeekerDashboardLayout><DashboardSeekerPage /></SeekerDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/seeker/applications" element={<ProtectedRoute allowedRoles={['seeker']}><SeekerDashboardLayout><DashboardSeekerApplicationsPage /></SeekerDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/seeker/profile" element={<ProtectedRoute allowedRoles={['seeker']}><SeekerDashboardLayout><DashboardSeekerProfilePage /></SeekerDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/seeker/reviews" element={<ProtectedRoute allowedRoles={['seeker']}><SeekerDashboardLayout><DashboardSeekerReviewsPage /></SeekerDashboardLayout></ProtectedRoute>} />
 
-          {/* Dashboard - Company */}
-          <Route path="/dashboard/company" element={<CompanyDashboardLayout><DashboardCompanyPage /></CompanyDashboardLayout>} />
-          <Route path="/dashboard/company/jobs" element={<CompanyDashboardLayout><DashboardCompanyJobsPage /></CompanyDashboardLayout>} />
-          <Route path="/dashboard/company/jobs/new" element={<CompanyDashboardLayout><DashboardCompanyJobsNewPage /></CompanyDashboardLayout>} />
-          <Route path="/dashboard/company/profile" element={<CompanyDashboardLayout><DashboardCompanyProfilePage /></CompanyDashboardLayout>} />
-          <Route path="/dashboard/company/requests" element={<CompanyDashboardLayout><DashboardCompanyRequestsPage /></CompanyDashboardLayout>} />
-          <Route path="/dashboard/company/services" element={<CompanyDashboardLayout><DashboardCompanyServicesPage /></CompanyDashboardLayout>} />
-          <Route path="/dashboard/company/services/new" element={<CompanyDashboardLayout><DashboardCompanyServicesNewPage /></CompanyDashboardLayout>} />
+          {/* Dashboard - Company (Protected) */}
+          <Route path="/dashboard/company" element={<ProtectedRoute allowedRoles={['company']}><CompanyDashboardLayout><DashboardCompanyPage /></CompanyDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/company/jobs" element={<ProtectedRoute allowedRoles={['company']}><CompanyDashboardLayout><DashboardCompanyJobsPage /></CompanyDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/company/jobs/new" element={<ProtectedRoute allowedRoles={['company']}><CompanyDashboardLayout><DashboardCompanyJobsNewPage /></CompanyDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/company/profile" element={<ProtectedRoute allowedRoles={['company']}><CompanyDashboardLayout><DashboardCompanyProfilePage /></CompanyDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/company/requests" element={<ProtectedRoute allowedRoles={['company']}><CompanyDashboardLayout><DashboardCompanyRequestsPage /></CompanyDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/company/services" element={<ProtectedRoute allowedRoles={['company']}><CompanyDashboardLayout><DashboardCompanyServicesPage /></CompanyDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/company/services/new" element={<ProtectedRoute allowedRoles={['company']}><CompanyDashboardLayout><DashboardCompanyServicesNewPage /></CompanyDashboardLayout></ProtectedRoute>} />
 
-          {/* Dashboard - Admin */}
-          <Route path="/dashboard/admin" element={<AdminDashboardLayout><DashboardAdminPage /></AdminDashboardLayout>} />
-          <Route path="/dashboard/admin/companies" element={<AdminDashboardLayout><DashboardAdminCompaniesPage /></AdminDashboardLayout>} />
-          <Route path="/dashboard/admin/jobs" element={<AdminDashboardLayout><DashboardAdminJobsPage /></AdminDashboardLayout>} />
-          <Route path="/dashboard/admin/reports" element={<AdminDashboardLayout><DashboardAdminReportsPage /></AdminDashboardLayout>} />
-          <Route path="/dashboard/admin/services" element={<AdminDashboardLayout><DashboardAdminServicesPage /></AdminDashboardLayout>} />
-          <Route path="/dashboard/admin/settings" element={<AdminDashboardLayout><DashboardAdminSettingsPage /></AdminDashboardLayout>} />
-          <Route path="/dashboard/admin/users" element={<AdminDashboardLayout><DashboardAdminUsersPage /></AdminDashboardLayout>} />
+          {/* Dashboard - Admin (Protected) */}
+          <Route path="/dashboard/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardLayout><DashboardAdminPage /></AdminDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/admin/companies" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardLayout><DashboardAdminCompaniesPage /></AdminDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/admin/jobs" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardLayout><DashboardAdminJobsPage /></AdminDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/admin/reports" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardLayout><DashboardAdminReportsPage /></AdminDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/admin/services" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardLayout><DashboardAdminServicesPage /></AdminDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/admin/settings" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardLayout><DashboardAdminSettingsPage /></AdminDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/admin/users" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardLayout><DashboardAdminUsersPage /></AdminDashboardLayout></ProtectedRoute>} />
         </Routes>
-      </LanguageProvider>
+      </AppProvider>
     </ThemeProvider>
   )
 }

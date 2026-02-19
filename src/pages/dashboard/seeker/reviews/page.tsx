@@ -1,4 +1,4 @@
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { StarRating } from "@/components/star-rating";
 
 const myReviews = [
@@ -7,7 +7,7 @@ const myReviews = [
 ];
 
 export default function SeekerReviewsPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div>

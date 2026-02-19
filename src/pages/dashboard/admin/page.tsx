@@ -1,4 +1,4 @@
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { Users, Building2, Wrench, Briefcase } from "lucide-react";
 
 const stats = [
@@ -9,7 +9,7 @@ const stats = [
 ];
 
 export default function AdminOverviewPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div>

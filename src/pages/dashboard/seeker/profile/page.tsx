@@ -1,7 +1,7 @@
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 
 export default function SeekerProfilePage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div>

@@ -1,10 +1,10 @@
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { StatusBadge } from "@/components/status-badge";
 import { seekerRequests } from "@/lib/data";
 import { Clock, CheckCircle2, XCircle } from "lucide-react";
 
 export default function SeekerRequestsPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   const pending = seekerRequests.filter((r) => r.status === "pending").length;
   const accepted = seekerRequests.filter((r) => r.status === "accepted").length;

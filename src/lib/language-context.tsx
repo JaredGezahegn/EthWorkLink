@@ -3,7 +3,7 @@ import { translations, type Language, type TranslationKey } from "./translations
 
 interface LanguageContextType {
   lang: Language;
-  toggleLang: () => void;
+  toggleLanguage: () => void;
   t: (key: TranslationKey) => string;
 }
 
@@ -12,7 +12,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Language>("en");
 
-  const toggleLang = useCallback(() => {
+  const toggleLanguage = useCallback(() => {
     setLang((prev) => (prev === "en" ? "am" : "en"));
   }, []);
 
@@ -24,7 +24,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <LanguageContext.Provider value={{ lang, toggleLang, t }}>
+    <LanguageContext.Provider value={{ lang, toggleLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );

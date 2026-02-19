@@ -2,13 +2,13 @@ import { useParams } from "react-router-dom";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { StarRating } from "@/components/star-rating";
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { featuredCompanies } from "@/lib/data";
 import { MapPin, Briefcase, Star, Banknote } from "lucide-react";
 
 export default function CompanyProfilePage() {
   const { id } = useParams<{ id: string }>();
-  const { t } = useLanguage();
+  const { t } = useApp();
   const company = featuredCompanies.find((c) => c.id === Number(id));
 
   if (!company) {

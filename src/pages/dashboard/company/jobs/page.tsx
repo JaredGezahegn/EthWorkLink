@@ -1,4 +1,4 @@
-import { useLanguage } from "@/lib/language-context";
+import { useApp } from "@/contexts/app-context";
 import { StatusBadge } from "@/components/status-badge";
 import { companyJobApplicants } from "@/lib/data";
 import { Pencil, Trash2 } from "lucide-react";
@@ -9,7 +9,7 @@ const myJobs = [
 ];
 
 export default function CompanyJobsPage() {
-  const { t } = useLanguage();
+  const { t } = useApp();
 
   return (
     <div>
