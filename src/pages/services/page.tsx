@@ -3,23 +3,46 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { StarRating } from "@/components/star-rating";
 import { useApp } from "@/contexts/app-context";
-import { serviceListings, locations } from "@/lib/data";
+import { locations } from "@/lib/data";
 import { MapPin, Building2 } from "lucide-react";
 
 const categories = ["All", "Electrician", "Plumbing", "Construction", "IT Services", "Cleaning", "Tutoring"];
 
 export default function ServicesPage() {
-  const { t } = useApp();
+  const { t, services, currentUser, createServiceRequest } = useApp();
   const [category, setCategory] = useState("All");
   const [location, setLocation] = useState("All");
   const [minRating, setMinRating] = useState(0);
 
-  const filtered = serviceListings.filter((s) => {
+  const filtered = services.filter((s) => {
     if (category !== "All" && s.category !== category) return false;
     if (location !== "All" && s.location !== location) return false;
-    if (s.rating < minRating) return false;
+    if (s.rating && s.rating < minRating) return false;
     return true;
   });
+
+  const handleRecruit = (service: typeof services[0]) => {
+    if (!currentUser) {
+      alert("Please login to request services");
+      return;
+    }
+
+    if ("companyName" in currentUser) {
+      alert("Companies cannot request services");
+      return;
+    }
+
+    createServiceRequest({
+      serviceId: service.id,
+      serviceName: service.title,
+      seekerId: currentUser.id,
+      seekerName: currentUser.name,
+      companyId: service.companyId,
+      companyName: service.companyName,
+    });
+
+    alert("Service request sent successfully!");
+  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -89,18 +112,30 @@ export default function ServicesPage() {
                     <h3 className="text-base font-semibold text-foreground">{service.title}</h3>
                     <div className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
                       <Building2 className="h-3.5 w-3.5" />
-                      {service.company}
+                      {service.companyName}
                     </div>
                     <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
                       <MapPin className="h-3.5 w-3.5" />
                       {service.location}
                     </div>
                     <div className="mt-2">
-                      <StarRating rating={service.rating} size={14} />
+                      <StarRating rating={service.rating || 0} size={14} />
                     </div>
+                    {service.photos && service.photos.length > 0 && (
+                      <div className="mt-3">
+                        <img
+                          src={service.photos[0]}
+                          alt={service.title}
+                          className="h-32 w-full rounded-lg object-cover"
+                        />
+                      </div>
+                    )}
                     <div className="mt-auto pt-4">
-                      <button className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90">
-                        {t("recruitService")}
+                      <button
+                        onClick={() => handleRecruit(service)}
+                        className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+                      >
+                        {t("recruitButton")}
                       </button>
                     </div>
                   </div>

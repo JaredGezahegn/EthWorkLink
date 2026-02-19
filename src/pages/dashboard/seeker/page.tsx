@@ -1,14 +1,17 @@
 import { useApp } from "@/contexts/app-context";
 import { StatusBadge } from "@/components/status-badge";
-import { seekerRequests } from "@/lib/data";
 import { Clock, CheckCircle2, XCircle } from "lucide-react";
 
 export default function SeekerRequestsPage() {
-  const { t } = useApp();
+  const { t, currentUser, getSeekerRequests } = useApp();
 
-  const pending = seekerRequests.filter((r) => r.status === "pending").length;
-  const accepted = seekerRequests.filter((r) => r.status === "accepted").length;
-  const completed = seekerRequests.filter((r) => r.status === "completed").length;
+  if (!currentUser) return null;
+
+  const requests = getSeekerRequests(currentUser.id);
+
+  const pending = requests.filter((r) => r.status === "pending").length;
+  const accepted = requests.filter((r) => r.status === "accepted").length;
+  const completed = requests.filter((r) => r.status === "completed").length;
 
   return (
     <div>
@@ -46,32 +49,39 @@ export default function SeekerRequestsPage() {
       </div>
 
       {/* Requests Table */}
-      <div className="mt-8 overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
-        <table className="w-full min-w-[500px] text-left text-sm">
-          <thead>
-            <tr className="border-b border-border bg-muted">
-              <th className="px-4 py-3 font-medium text-muted-foreground">{t("services")}</th>
-              <th className="px-4 py-3 font-medium text-muted-foreground">{t("company")}</th>
-              <th className="px-4 py-3 font-medium text-muted-foreground">{t("date")}</th>
-              <th className="px-4 py-3 font-medium text-muted-foreground">{t("status")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {seekerRequests.map((req) => (
-              <tr key={req.id} className="border-b border-border last:border-0">
-                <td className="px-4 py-3 font-medium text-foreground">{req.service}</td>
-                <td className="px-4 py-3 text-muted-foreground">{req.company}</td>
-                <td className="px-4 py-3 text-muted-foreground">{req.date}</td>
-                <td className="px-4 py-3">
-                  <StatusBadge status={req.status} />
-                </td>
+      {requests.length === 0 ? (
+        <div className="mt-8 rounded-xl border-2 border-dashed border-border bg-muted/50 p-12 text-center">
+          <h3 className="text-lg font-semibold text-foreground">No service requests yet</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Browse services and request help from providers
+          </p>
+        </div>
+      ) : (
+        <div className="mt-8 overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+          <table className="w-full min-w-[500px] text-left text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted">
+                <th className="px-4 py-3 font-medium text-muted-foreground">Service</th>
+                <th className="px-4 py-3 font-medium text-muted-foreground">{t("company")}</th>
+                <th className="px-4 py-3 font-medium text-muted-foreground">{t("date")}</th>
+                <th className="px-4 py-3 font-medium text-muted-foreground">{t("status")}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {requests.map((req) => (
+                <tr key={req.id} className="border-b border-border last:border-0">
+                  <td className="px-4 py-3 font-medium text-foreground">{req.serviceName}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{req.companyName}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{req.date}</td>
+                  <td className="px-4 py-3">
+                    <StatusBadge status={req.status} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
-
-

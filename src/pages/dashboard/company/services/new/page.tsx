@@ -1,10 +1,10 @@
 import { useState, FormEvent, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "@/contexts/app-context";
-import { Upload, X, Plus, Image as ImageIcon } from "lucide-react";
+import { Upload, X, Image as ImageIcon } from "lucide-react";
 
 export default function NewServicePage() {
-  const { t, addService, currentUser } = useApp();
+  const { addService, currentUser } = useApp();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",

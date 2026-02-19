@@ -1,89 +1,88 @@
+import { useState, FormEvent } from "react";
 import { useApp } from "@/contexts/app-context";
 
 export default function AdminSettingsPage() {
   const { t } = useApp();
+  const [success, setSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    siteName: "EthioWorkLink",
+    supportEmail: "support@ethioworklink.com",
+    maintenanceMode: false,
+    allowRegistrations: true,
+  });
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    // In a real app, this would save settings
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
+  };
 
   return (
     <div>
       <h1 className="text-xl font-bold text-foreground lg:text-2xl">{t("systemSettings")}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">Configure platform settings and preferences</p>
+      <p className="mt-1 text-sm text-muted-foreground">Configure system-wide settings</p>
 
-      <div className="mt-6 flex flex-col gap-6">
-        {/* General Settings */}
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-foreground">General Settings</h2>
-          <div className="mt-4 flex flex-col gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-foreground">Platform Name</label>
-              <input
-                type="text"
-                defaultValue="Ethio-Work Link"
-                className="rounded-lg border border-input bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-foreground">Support Email</label>
-              <input
-                type="email"
-                defaultValue="support@ethioworklink.com"
-                className="rounded-lg border border-input bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-foreground">Default Language</label>
-              <select className="rounded-lg border border-input bg-background px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
-                <option value="en">English</option>
-                <option value="am">Amharic</option>
-              </select>
-            </div>
-          </div>
+      {success && (
+        <div className="mt-4 rounded-lg bg-success/15 px-4 py-3 text-sm text-success">
+          Settings saved successfully!
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="mt-6 max-w-md flex flex-col gap-4">
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Site Name</label>
+          <input
+            type="text"
+            value={formData.siteName}
+            onChange={(e) => setFormData({ ...formData, siteName: e.target.value })}
+            className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          />
         </div>
 
-        {/* Notification Settings */}
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-foreground">Notification Settings</h2>
-          <div className="mt-4 flex flex-col gap-4">
-            {[
-              { label: "Email notifications for new registrations", defaultChecked: true },
-              { label: "Email notifications for company approvals", defaultChecked: true },
-              { label: "Weekly analytics digest", defaultChecked: false },
-            ].map((setting, i) => (
-              <label key={i} className="flex cursor-pointer items-center justify-between rounded-lg border border-border p-3">
-                <span className="text-sm text-foreground">{setting.label}</span>
-                <div className="relative">
-                  <input
-                    type="checkbox"
-                    defaultChecked={setting.defaultChecked}
-                    className="peer sr-only"
-                  />
-                  <div className="h-6 w-11 rounded-full bg-muted transition-colors peer-checked:bg-primary" />
-                  <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-card shadow-sm transition-transform peer-checked:translate-x-5" />
-                </div>
-              </label>
-            ))}
-          </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Support Email</label>
+          <input
+            type="email"
+            value={formData.supportEmail}
+            onChange={(e) => setFormData({ ...formData, supportEmail: e.target.value })}
+            className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          />
         </div>
 
-        {/* Danger Zone */}
-        <div className="rounded-xl border border-destructive/30 bg-card p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-destructive">Danger Zone</h2>
-          <p className="mt-1 text-sm text-muted-foreground">These actions are irreversible. Please proceed with caution.</p>
-          <div className="mt-4 flex gap-3">
-            <button className="rounded-md border border-destructive/30 px-4 py-2 text-sm font-medium text-destructive hover:bg-destructive/10">
-              Reset All Data
-            </button>
-            <button className="rounded-md border border-destructive/30 px-4 py-2 text-sm font-medium text-destructive hover:bg-destructive/10">
-              Export Database
-            </button>
-          </div>
+        <div className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            id="maintenance"
+            checked={formData.maintenanceMode}
+            onChange={(e) => setFormData({ ...formData, maintenanceMode: e.target.checked })}
+            className="h-4 w-4 rounded border-input"
+          />
+          <label htmlFor="maintenance" className="text-sm font-medium text-foreground">
+            Maintenance Mode
+          </label>
         </div>
 
-        <button className="self-start rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90">
+        <div className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            id="registrations"
+            checked={formData.allowRegistrations}
+            onChange={(e) => setFormData({ ...formData, allowRegistrations: e.target.checked })}
+            className="h-4 w-4 rounded border-input"
+          />
+          <label htmlFor="registrations" className="text-sm font-medium text-foreground">
+            Allow New Registrations
+          </label>
+        </div>
+
+        <button
+          type="submit"
+          className="mt-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+        >
           Save Settings
         </button>
-      </div>
+      </form>
     </div>
   );
 }
-
-

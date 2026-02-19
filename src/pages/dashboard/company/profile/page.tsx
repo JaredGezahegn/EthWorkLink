@@ -1,18 +1,45 @@
+import { useState, FormEvent } from "react";
 import { useApp } from "@/contexts/app-context";
 import { locations } from "@/lib/data";
 
 export default function CompanyProfileSettingsPage() {
-  const { t } = useApp();
+  const { t, currentUser } = useApp();
+  const [success, setSuccess] = useState(false);
+
+  if (!currentUser || !("companyName" in currentUser)) return null;
+
+  const [formData, setFormData] = useState({
+    companyName: currentUser.companyName,
+    ownerName: currentUser.ownerName,
+    email: currentUser.email,
+    location: currentUser.location,
+    description: currentUser.description,
+  });
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    // In a real app, this would update the company in context
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 3000);
+  };
 
   return (
     <div>
       <h1 className="text-xl font-bold text-foreground lg:text-2xl">{t("companyProfileSettings")}</h1>
-      <form className="mt-6 max-w-md flex flex-col gap-4">
+      
+      {success && (
+        <div className="mt-4 rounded-lg bg-success/15 px-4 py-3 text-sm text-success">
+          Profile updated successfully!
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="mt-6 max-w-md flex flex-col gap-4">
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">{t("companyName")}</label>
           <input
             type="text"
-            defaultValue="Ethio Electric Solutions"
+            value={formData.companyName}
+            onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
             className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
@@ -20,7 +47,8 @@ export default function CompanyProfileSettingsPage() {
           <label className="mb-1.5 block text-sm font-medium text-foreground">{t("ownerName")}</label>
           <input
             type="text"
-            defaultValue="Tekle Hailu"
+            value={formData.ownerName}
+            onChange={(e) => setFormData({ ...formData, ownerName: e.target.value })}
             className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
@@ -28,14 +56,16 @@ export default function CompanyProfileSettingsPage() {
           <label className="mb-1.5 block text-sm font-medium text-foreground">{t("email")}</label>
           <input
             type="email"
-            defaultValue="info@ethioelectric.com"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">{t("companyLocation")}</label>
           <select
-            defaultValue="Addis Ababa"
+            value={formData.location}
+            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
             className="w-full appearance-none rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           >
             {locations.map((loc) => (
@@ -47,12 +77,13 @@ export default function CompanyProfileSettingsPage() {
           <label className="mb-1.5 block text-sm font-medium text-foreground">{t("companyDescription")}</label>
           <textarea
             rows={4}
-            defaultValue="Leading electrical services provider in Ethiopia with over 10 years of experience in residential and commercial electrical installations."
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
         <button
-          type="button"
+          type="submit"
           className="mt-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
         >
           Save Changes
@@ -61,5 +92,3 @@ export default function CompanyProfileSettingsPage() {
     </div>
   );
 }
-
-
