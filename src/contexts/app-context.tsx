@@ -79,6 +79,7 @@ export interface ServiceRequest {
   status: RequestStatus;
   date: string;
   message?: string;
+  description?: string; // Service requirements description
 }
 
 export interface JobApplication {
@@ -120,6 +121,10 @@ interface AppContextType {
   updateService: (id: string, updates: Partial<Service>) => void;
   deleteService: (id: string) => void;
   searchServices: (keyword: string, location: string, category: string) => Service[];
+  addReview: (review: Omit<ServiceReview, "id" | "date">) => void;
+  getServiceReviews: (serviceId: string) => ServiceReview[];
+  getCompanyReviews: (companyId: string) => ServiceReview[];
+  updateCompanyRating: (companyId: string) => void;
   
   // Actions - Jobs
   addJob: (job: Omit<Job, "id">) => void;
@@ -182,17 +187,17 @@ const translations = {
     active: "Active",
     
     // Hero Section
-    heroTitle: "Find Trusted Service Providers in Ethiopia",
-    heroSubtitle: "Connect with top-rated professionals and companies for all your service needs",
+    heroTitle: "Find Trusted Blue-Collar Workers in Ethiopia",
+    heroSubtitle: "Connect with skilled electricians, plumbers, construction workers, and more for all your service needs",
     
     // Categories
     serviceCategories: "Service Categories",
     electrician: "Electrician",
     plumbing: "Plumbing",
     construction: "Construction",
-    itServices: "IT Services",
     cleaning: "Cleaning",
-    tutoring: "Tutoring",
+    welding: "Welding",
+    carpentry: "Carpentry",
     
     // Featured
     featuredCompanies: "Featured Companies",
@@ -200,9 +205,9 @@ const translations = {
     // Registration
     registerAs: "Register As",
     serviceSeeker: "Service Seeker",
-    serviceSeekerDesc: "Looking for professional services? Register as a seeker to find and recruit trusted providers.",
+    serviceSeekerDesc: "Looking for skilled workers? Register as a seeker to find and hire trusted blue-collar professionals.",
     serviceProvider: "Service Provider Company",
-    serviceProviderDesc: "Offer your professional services? Register your company to reach thousands of clients.",
+    serviceProviderDesc: "Offer blue-collar services? Register your company to reach thousands of clients seeking skilled workers.",
     
     // Form Fields
     fullName: "Full Name",
@@ -294,17 +299,17 @@ const translations = {
     active: "ንቁ",
     
     // Hero Section
-    heroTitle: "በኢትዮጵያ ውስጥ የታመኑ አገልግሎት ሰጪዎችን ያግኙ",
-    heroSubtitle: "ለሁሉም የአገልግሎት ፍላጎቶችዎ ከከፍተኛ ደረጃ ባለሙያዎች እና ኩባንያዎች ጋር ይገናኙ",
+    heroTitle: "በኢትዮጵያ ውስጥ የታመኑ ሰለጠኑ ሰራተኞችን ያግኙ",
+    heroSubtitle: "ለሁሉም የአገልግሎት ፍላጎቶችዎ ከሰለጠኑ ኤሌክትሪሺያኖች፣ የቧንቧ ባለሙያዎች፣ የግንባታ ሰራተኞች እና ሌሎች ጋር ይገናኙ",
     
     // Categories
     serviceCategories: "የአገልግሎት ምድቦች",
     electrician: "ኤሌክትሪሺያን",
     plumbing: "የቧንቧ ስራ",
     construction: "ግንባታ",
-    itServices: "የአይቲ አገልግሎቶች",
     cleaning: "ጽዳት",
-    tutoring: "ትምህርት",
+    welding: "ብረት ስራ",
+    carpentry: "የእንጨት ስራ",
     
     // Featured
     featuredCompanies: "ተመራጭ ኩባንያዎች",
@@ -312,9 +317,9 @@ const translations = {
     // Registration
     registerAs: "እንደ ተመዝገብ",
     serviceSeeker: "አገልግሎት ፈላጊ",
-    serviceSeekerDesc: "ለሙያዊ አገልግሎቶች እየፈለጉ ነው? የታመኑ አቅራቢዎችን ለማግኘት እና ለመቅጠር እንደ ፈላጊ ይመዝገቡ።",
+    serviceSeekerDesc: "የሰለጠኑ ሰራተኞችን እየፈለጉ ነው? የታመኑ ሰለጠኑ ሰራተኞችን ለማግኘት እና ለመቅጠር እንደ ፈላጊ ይመዝገቡ።",
     serviceProvider: "የአገልግሎት አቅራቢ ኩባንያ",
-    serviceProviderDesc: "የእርስዎን ሙያዊ አገልግሎቶች ይስጡ? በሺዎች የሚቆጠሩ ደንበኞችን ለማግኘት ኩባንያዎን ይመዝገቡ።",
+    serviceProviderDesc: "የሰለጠኑ ሰራተኞች አገልግሎት ይሰጣሉ? ሰለጠኑ ሰራተኞችን የሚፈልጉ በሺዎች የሚቆጠሩ ደንበኞችን ለማግኘት ኩባንያዎን ይመዝገቡ።",
     
     // Form Fields
     fullName: "ሙሉ ስም",
@@ -606,6 +611,53 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  // Review functions
+  const addReview = (review: Omit<ServiceReview, "id" | "date">) => {
+    const newReview: ServiceReview = {
+      ...review,
+      id: `review-${Date.now()}`,
+      date: new Date().toISOString().split("T")[0],
+    };
+
+    // Add review to service
+    setServices(services.map((s) => {
+      if (s.id === review.serviceId) {
+        const updatedReviews = [...(s.reviews || []), newReview];
+        const avgRating = updatedReviews.reduce((sum, r) => sum + r.rating, 0) / updatedReviews.length;
+        return { ...s, reviews: updatedReviews, rating: avgRating };
+      }
+      return s;
+    }));
+
+    // Update company rating
+    const service = services.find(s => s.id === review.serviceId);
+    if (service) {
+      updateCompanyRating(service.companyId);
+    }
+  };
+
+  const getServiceReviews = (serviceId: string) => {
+    const service = services.find(s => s.id === serviceId);
+    return service?.reviews || [];
+  };
+
+  const getCompanyReviews = (companyId: string) => {
+    const companyServices = services.filter(s => s.companyId === companyId);
+    return companyServices.flatMap(s => s.reviews || []);
+  };
+
+  const updateCompanyRating = (companyId: string) => {
+    const companyServices = services.filter(s => s.companyId === companyId);
+    const allReviews = companyServices.flatMap(s => s.reviews || []);
+    
+    if (allReviews.length > 0) {
+      const avgRating = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
+      setCompanies(companies.map(c => 
+        c.id === companyId ? { ...c, rating: avgRating } : c
+      ));
+    }
+  };
+
   // Job functions
   const addJob = (job: Omit<Job, "id">) => {
     const newJob: Job = {
@@ -708,6 +760,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateService,
     deleteService,
     searchServices,
+    addReview,
+    getServiceReviews,
+    getCompanyReviews,
+    updateCompanyRating,
     addJob,
     updateJob,
     deleteJob,

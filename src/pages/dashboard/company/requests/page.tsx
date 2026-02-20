@@ -43,6 +43,7 @@ export default function CompanyRequestsPage() {
               <tr className="border-b border-border bg-muted">
                 <th className="px-4 py-3 font-medium text-muted-foreground">Seeker</th>
                 <th className="px-4 py-3 font-medium text-muted-foreground">Service</th>
+                <th className="px-4 py-3 font-medium text-muted-foreground">Requirements</th>
                 <th className="px-4 py-3 font-medium text-muted-foreground">{t("date")}</th>
                 <th className="px-4 py-3 font-medium text-muted-foreground">{t("status")}</th>
                 <th className="px-4 py-3 font-medium text-muted-foreground">Actions</th>
@@ -53,6 +54,11 @@ export default function CompanyRequestsPage() {
                 <tr key={req.id} className="border-b border-border last:border-0">
                   <td className="px-4 py-3 font-medium text-foreground">{req.seekerName}</td>
                   <td className="px-4 py-3 text-muted-foreground">{req.serviceName}</td>
+                  <td className="px-4 py-3 text-muted-foreground max-w-xs">
+                    <div className="line-clamp-2" title={req.description}>
+                      {req.description || "No description provided"}
+                    </div>
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground">{req.date}</td>
                   <td className="px-4 py-3">
                     <StatusBadge status={req.status} />

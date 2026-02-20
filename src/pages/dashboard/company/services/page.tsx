@@ -1,6 +1,6 @@
 import { useApp } from "@/contexts/app-context";
 import { Link } from "@/components/link";
-import { Trash2, Image as ImageIcon } from "lucide-react";
+import { Trash2, Image as ImageIcon, Pencil } from "lucide-react";
 
 export default function CompanyServicesPage() {
   const { services, currentUser, deleteService } = useApp();
@@ -89,6 +89,13 @@ export default function CompanyServicesPage() {
                 )}
 
                 <div className="mt-4 flex gap-2">
+                  <Link
+                    href={`/dashboard/company/services/edit/${service.id}`}
+                    className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
+                  >
+                    <Pencil className="h-3 w-3" />
+                    Edit
+                  </Link>
                   <button
                     onClick={() => handleDelete(service.id)}
                     className="flex items-center gap-1.5 rounded-lg border border-destructive/30 px-3 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10"

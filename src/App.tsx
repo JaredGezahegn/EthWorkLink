@@ -33,6 +33,7 @@ import DashboardCompanyProfilePage from '@/pages/dashboard/company/profile/page'
 import DashboardCompanyRequestsPage from '@/pages/dashboard/company/requests/page'
 import DashboardCompanyServicesPage from '@/pages/dashboard/company/services/page'
 import DashboardCompanyServicesNewPage from '@/pages/dashboard/company/services/new/page'
+import DashboardCompanyServicesEditPage from '@/pages/dashboard/company/services/edit/[id]/page'
 
 // Dashboard - Admin
 import DashboardAdminPage from '@/pages/dashboard/admin/page'
@@ -73,6 +74,7 @@ function App() {
           <Route path="/dashboard/company/requests" element={<ProtectedRoute allowedRoles={['company']}><CompanyDashboardLayout><DashboardCompanyRequestsPage /></CompanyDashboardLayout></ProtectedRoute>} />
           <Route path="/dashboard/company/services" element={<ProtectedRoute allowedRoles={['company']}><CompanyDashboardLayout><DashboardCompanyServicesPage /></CompanyDashboardLayout></ProtectedRoute>} />
           <Route path="/dashboard/company/services/new" element={<ProtectedRoute allowedRoles={['company']}><CompanyDashboardLayout><DashboardCompanyServicesNewPage /></CompanyDashboardLayout></ProtectedRoute>} />
+          <Route path="/dashboard/company/services/edit/:id" element={<ProtectedRoute allowedRoles={['company']}><CompanyDashboardLayout><DashboardCompanyServicesEditPage /></CompanyDashboardLayout></ProtectedRoute>} />
 
           {/* Dashboard - Admin (Protected) */}
           <Route path="/dashboard/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboardLayout><DashboardAdminPage /></AdminDashboardLayout></ProtectedRoute>} />

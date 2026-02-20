@@ -13,9 +13,9 @@ export const serviceCategories = [
   { id: "electrician", icon: "Zap", label: "electrician" as const },
   { id: "plumbing", icon: "Droplets", label: "plumbing" as const },
   { id: "construction", icon: "HardHat", label: "construction" as const },
-  { id: "it", icon: "Monitor", label: "itServices" as const },
   { id: "cleaning", icon: "Sparkles", label: "cleaning" as const },
-  { id: "tutoring", icon: "GraduationCap", label: "tutoring" as const },
+  { id: "welding", icon: "Wrench", label: "welding" as const },
+  { id: "carpentry", icon: "Hammer", label: "carpentry" as const },
 ];
 
 export const featuredCompanies = [

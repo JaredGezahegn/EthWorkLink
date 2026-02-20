@@ -1,11 +1,15 @@
-import { useState, FormEvent, ChangeEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, FormEvent, ChangeEvent, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useApp } from "@/contexts/app-context";
-import { Upload, X, Image as ImageIcon } from "lucide-react";
+import { X, Image as ImageIcon } from "lucide-react";
 
-export default function NewServicePage() {
-  const { addService, currentUser } = useApp();
+export default function EditServicePage() {
+  const { id } = useParams<{ id: string }>();
+  const { currentUser, services, updateService } = useApp();
   const navigate = useNavigate();
+  
+  const service = services.find(s => s.id === id);
+  
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -21,6 +25,22 @@ export default function NewServicePage() {
 
   const categories = ["Electrician", "Plumbing", "Construction", "Cleaning", "Welding", "Carpentry"];
 
+  useEffect(() => {
+    if (service) {
+      setFormData({
+        title: service.title,
+        category: service.category,
+        description: service.description,
+        location: service.location,
+        clientName: service.clientName || "",
+        completedDate: service.completedDate || "",
+      });
+      setPhotos(service.photos || []);
+    } else {
+      setError("Service not found");
+    }
+  }, [service]);
+
   const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -31,19 +51,16 @@ export default function NewServicePage() {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         setError(`${file.name} is not an image file`);
         continue;
       }
 
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         setError(`${file.name} is too large. Max size is 5MB`);
         continue;
       }
 
-      // Convert to base64
       const reader = new FileReader();
       const base64Promise = new Promise<string>((resolve) => {
         reader.onloadend = () => {
@@ -60,7 +77,6 @@ export default function NewServicePage() {
     setUploading(false);
     setError("");
     
-    // Reset input
     e.target.value = "";
   };
 
@@ -77,26 +93,19 @@ export default function NewServicePage() {
       return;
     }
 
-    if (!currentUser) {
-      setError("You must be logged in");
+    if (!currentUser || !service) {
+      setError("Service not found");
       return;
     }
 
-    const companyName = "companyName" in currentUser ? currentUser.companyName : "Unknown";
-    const companyId = currentUser.id;
-
-    addService({
+    updateService(service.id, {
       title: formData.title,
       category: formData.category,
       location: formData.location,
-      companyId,
-      companyName,
       description: formData.description,
       photos,
       completedDate: formData.completedDate,
       clientName: formData.clientName || undefined,
-      rating: 0,
-      reviews: [],
     });
 
     setSuccess(true);
@@ -105,16 +114,27 @@ export default function NewServicePage() {
     }, 2000);
   };
 
+  if (!service) {
+    return (
+      <div>
+        <h1 className="text-xl font-bold text-foreground lg:text-2xl">Service Not Found</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          The service you're trying to edit doesn't exist.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <h1 className="text-xl font-bold text-foreground lg:text-2xl">Showcase Completed Work</h1>
+      <h1 className="text-xl font-bold text-foreground lg:text-2xl">Edit Portfolio Item</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Share photos and details of your completed projects to build your portfolio
+        Update your completed project details
       </p>
 
       {success && (
         <div className="mt-4 rounded-lg bg-success/15 px-4 py-3 text-sm text-success">
-          Portfolio item added successfully! Redirecting...
+          Portfolio item updated successfully! Redirecting...
         </div>
       )}
 
@@ -125,7 +145,6 @@ export default function NewServicePage() {
           </div>
         )}
 
-        {/* Project Title */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">
             Project Title *
@@ -140,7 +159,6 @@ export default function NewServicePage() {
           />
         </div>
 
-        {/* Category */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">Category *</label>
           <select
@@ -156,7 +174,6 @@ export default function NewServicePage() {
           </select>
         </div>
 
-        {/* Location */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">Location *</label>
           <input
@@ -169,17 +186,16 @@ export default function NewServicePage() {
           />
         </div>
 
-        {/* Photos Upload */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">
-            Project Photos * (Upload from your device)
+            Project Photos *
           </label>
           
           <div className="mt-2">
             <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/50 px-6 py-8 hover:bg-muted">
               <ImageIcon className="h-12 w-12 text-muted-foreground" />
               <span className="mt-2 text-sm font-medium text-foreground">
-                {uploading ? "Uploading..." : "Click to upload photos"}
+                {uploading ? "Uploading..." : "Click to upload more photos"}
               </span>
               <span className="mt-1 text-xs text-muted-foreground">
                 PNG, JPG, WEBP up to 5MB each
@@ -195,7 +211,6 @@ export default function NewServicePage() {
             </label>
           </div>
 
-          {/* Photo Preview */}
           {photos.length > 0 && (
             <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
               {photos.map((photo, index) => (
@@ -219,15 +234,8 @@ export default function NewServicePage() {
               ))}
             </div>
           )}
-          
-          <p className="mt-2 text-xs text-muted-foreground">
-            {photos.length > 0 
-              ? `${photos.length} photo${photos.length > 1 ? 's' : ''} uploaded. You can add more.`
-              : "Upload photos showing your completed work. You can select multiple files at once."}
-          </p>
         </div>
 
-        {/* Description */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">
             Project Description *
@@ -242,7 +250,6 @@ export default function NewServicePage() {
           />
         </div>
 
-        {/* Optional Fields */}
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-1.5 block text-sm font-medium text-foreground">
@@ -270,17 +277,23 @@ export default function NewServicePage() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={uploading}
-          className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
-        >
-          <Upload className="h-4 w-4" />
-          Add to Portfolio
-        </button>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => navigate("/dashboard/company/services")}
+            className="flex-1 rounded-lg border border-border px-6 py-3 text-sm font-semibold text-foreground hover:bg-muted"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={uploading}
+            className="flex-1 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+          >
+            Update Portfolio
+          </button>
+        </div>
       </form>
     </div>
   );
 }
-
-

@@ -1,14 +1,22 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { StarRating } from "@/components/star-rating";
 import { useApp } from "@/contexts/app-context";
-import { MapPin, Briefcase, Star, Banknote, Image as ImageIcon } from "lucide-react";
+import { MapPin, Briefcase, Star, Banknote, Image as ImageIcon, MessageSquare } from "lucide-react";
 
 export default function CompanyProfilePage() {
   const { id } = useParams<{ id: string }>();
-  const { t, companies, services, jobs, currentUser, createServiceRequest, applyForJob } = useApp();
+  const { t, companies, services, jobs, currentUser, createServiceRequest, applyForJob, addReview, getCompanyReviews } = useApp();
   const company = companies.find((c) => c.id === id);
+  
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [selectedServiceId, setSelectedServiceId] = useState("");
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [requestDescription, setRequestDescription] = useState("");
 
   if (!company) {
     return (
@@ -25,6 +33,7 @@ export default function CompanyProfilePage() {
   // Get company's services and jobs
   const companyServices = services.filter(s => s.companyId === company.id);
   const companyJobs = jobs.filter(j => j.companyId === company.id);
+  const companyReviews = getCompanyReviews(company.id);
 
   const handleRecruit = () => {
     if (!currentUser) {
@@ -42,7 +51,18 @@ export default function CompanyProfilePage() {
       return;
     }
 
-    // Create request for the first service (or you could show a modal to select)
+    setShowRequestModal(true);
+  };
+
+  const handleSubmitRequest = () => {
+    if (!currentUser || companyServices.length === 0) return;
+    if ("companyName" in currentUser) return;
+
+    if (requestDescription.trim().length < 10) {
+      alert("Please describe your requirements (minimum 10 characters)");
+      return;
+    }
+
     const service = companyServices[0];
     createServiceRequest({
       serviceId: service.id,
@@ -51,9 +71,12 @@ export default function CompanyProfilePage() {
       seekerName: currentUser.name,
       companyId: company.id,
       companyName: company.companyName,
+      description: requestDescription.trim(),
     });
 
     alert("Service request sent successfully!");
+    setShowRequestModal(false);
+    setRequestDescription("");
   };
 
   const handleApplyJob = (job: typeof companyJobs[0]) => {
@@ -77,6 +100,45 @@ export default function CompanyProfilePage() {
     });
 
     alert("Application submitted successfully!");
+  };
+
+  const handleOpenReviewForm = (serviceId: string) => {
+    if (!currentUser) {
+      alert("Please login to leave a review");
+      return;
+    }
+
+    if ("companyName" in currentUser) {
+      alert("Companies cannot leave reviews");
+      return;
+    }
+
+    setSelectedServiceId(serviceId);
+    setShowReviewForm(true);
+  };
+
+  const handleSubmitReview = () => {
+    if (!currentUser || "companyName" in currentUser) return;
+    if (!selectedServiceId) return;
+
+    if (reviewComment.trim().length < 10) {
+      alert("Please write at least 10 characters in your review");
+      return;
+    }
+
+    addReview({
+      serviceId: selectedServiceId,
+      userId: currentUser.id,
+      userName: currentUser.name,
+      rating: reviewRating,
+      comment: reviewComment.trim(),
+    });
+
+    alert("Review submitted successfully!");
+    setShowReviewForm(false);
+    setReviewComment("");
+    setReviewRating(5);
+    setSelectedServiceId("");
   };
 
   return (
@@ -117,6 +179,19 @@ export default function CompanyProfilePage() {
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{company.description}</p>
               </section>
 
+              {/* Debug Info - Remove after testing */}
+              <div className="mt-4 rounded-lg border border-warning bg-warning/10 p-4">
+                <p className="text-sm text-foreground">
+                  <strong>Debug:</strong> Company ID: {company.id}
+                </p>
+                <p className="text-sm text-foreground">
+                  Services found: {companyServices.length}
+                </p>
+                <p className="text-sm text-foreground">
+                  Total services in system: {services.length}
+                </p>
+              </div>
+
               {/* Portfolio / Services */}
               {companyServices.length > 0 && (
                 <section className="mt-8">
@@ -144,10 +219,20 @@ export default function CompanyProfilePage() {
                             {service.description}
                           </p>
                           {service.rating !== undefined && service.rating > 0 && (
-                            <div className="mt-2">
+                            <div className="mt-2 flex items-center gap-2">
                               <StarRating rating={service.rating} size={12} />
+                              <span className="text-xs text-muted-foreground">
+                                ({service.reviews?.length || 0} reviews)
+                              </span>
                             </div>
                           )}
+                          <button
+                            onClick={() => handleOpenReviewForm(service.id)}
+                            className="mt-3 flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                          >
+                            <MessageSquare className="h-3 w-3" />
+                            Leave a Review
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -188,11 +273,13 @@ export default function CompanyProfilePage() {
               )}
 
               {/* Reviews */}
-              {companyServices.some(s => s.reviews && s.reviews.length > 0) && (
+              {companyReviews.length > 0 && (
                 <section className="mt-8">
-                  <h2 className="text-lg font-semibold text-foreground">{t("reviews")}</h2>
+                  <h2 className="text-lg font-semibold text-foreground">
+                    {t("reviews")} ({companyReviews.length})
+                  </h2>
                   <div className="mt-3 flex flex-col gap-3">
-                    {companyServices.flatMap(s => s.reviews || []).map((review) => (
+                    {companyReviews.map((review) => (
                       <div key={review.id} className="rounded-lg border border-border bg-card p-4">
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium text-foreground">{review.userName}</span>
@@ -234,6 +321,120 @@ export default function CompanyProfilePage() {
           </div>
         </div>
       </main>
+
+      {/* Service Request Modal */}
+      {showRequestModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-lg">
+            <h3 className="text-lg font-semibold text-foreground">Request Service</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {company.companyName}
+            </p>
+
+            <div className="mt-4">
+              <label className="mb-2 block text-sm font-medium text-foreground">
+                Describe Your Requirements *
+              </label>
+              <textarea
+                value={requestDescription}
+                onChange={(e) => setRequestDescription(e.target.value)}
+                rows={5}
+                placeholder="Please describe what you need, when you need it, and any specific requirements..."
+                className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+              <p className="mt-1 text-xs text-muted-foreground">
+                Minimum 10 characters ({requestDescription.length}/10)
+              </p>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => {
+                  setShowRequestModal(false);
+                  setRequestDescription("");
+                }}
+                className="flex-1 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitRequest}
+                disabled={requestDescription.trim().length < 10}
+                className="flex-1 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
+              >
+                Send Request
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Review Form Modal */}
+      {showReviewForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-lg">
+            <h3 className="text-lg font-semibold text-foreground">Leave a Review</h3>
+            <p className="mt-1 text-sm text-muted-foreground">Share your experience with this service</p>
+
+            <div className="mt-4">
+              <label className="mb-2 block text-sm font-medium text-foreground">Rating</label>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    onClick={() => setReviewRating(star)}
+                    className="transition-transform hover:scale-110"
+                  >
+                    <Star
+                      className={`h-8 w-8 ${
+                        star <= reviewRating
+                          ? "fill-warning text-warning"
+                          : "text-muted-foreground"
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <label className="mb-2 block text-sm font-medium text-foreground">Your Review</label>
+              <textarea
+                value={reviewComment}
+                onChange={(e) => setReviewComment(e.target.value)}
+                rows={4}
+                placeholder="Tell others about your experience..."
+                className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+              <p className="mt-1 text-xs text-muted-foreground">
+                Minimum 10 characters ({reviewComment.length}/10)
+              </p>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => {
+                  setShowReviewForm(false);
+                  setReviewComment("");
+                  setReviewRating(5);
+                  setSelectedServiceId("");
+                }}
+                className="flex-1 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitReview}
+                disabled={reviewComment.trim().length < 10}
+                className="flex-1 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
+              >
+                Submit Review
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );

@@ -1,4 +1,4 @@
-import { Zap, Droplets, HardHat, Monitor, Sparkles, GraduationCap } from "lucide-react";
+import { Zap, Droplets, HardHat, Sparkles, Wrench, Hammer } from "lucide-react";
 import { useApp } from "@/contexts/app-context";
 import { serviceCategories } from "@/lib/data";
 import type { TranslationKey } from "@/lib/translations";
@@ -7,9 +7,9 @@ const iconMap: Record<string, React.ElementType> = {
   Zap,
   Droplets,
   HardHat,
-  Monitor,
   Sparkles,
-  GraduationCap,
+  Wrench,
+  Hammer,
 };
 
 export function CategoriesSection() {
