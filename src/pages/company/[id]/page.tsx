@@ -179,19 +179,6 @@ export default function CompanyProfilePage() {
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{company.description}</p>
               </section>
 
-              {/* Debug Info - Remove after testing */}
-              <div className="mt-4 rounded-lg border border-warning bg-warning/10 p-4">
-                <p className="text-sm text-foreground">
-                  <strong>Debug:</strong> Company ID: {company.id}
-                </p>
-                <p className="text-sm text-foreground">
-                  Services found: {companyServices.length}
-                </p>
-                <p className="text-sm text-foreground">
-                  Total services in system: {services.length}
-                </p>
-              </div>
-
               {/* Portfolio / Services */}
               {companyServices.length > 0 && (
                 <section className="mt-8">

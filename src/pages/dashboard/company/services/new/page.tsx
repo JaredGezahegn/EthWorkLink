@@ -1,11 +1,12 @@
-import { useState, FormEvent, ChangeEvent } from "react";
+import { useState, FormEvent, ChangeEvent, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "@/contexts/app-context";
-import { Upload, X, Image as ImageIcon } from "lucide-react";
+import { Upload, X, Image as ImageIcon, Calendar } from "lucide-react";
 
 export default function NewServicePage() {
   const { addService, currentUser } = useApp();
   const navigate = useNavigate();
+  const dateInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -259,14 +260,30 @@ export default function NewServicePage() {
 
           <div>
             <label className="mb-1.5 block text-sm font-medium text-foreground">
-              Completion Date
+              Completion Date (Optional)
             </label>
-            <input
-              type="date"
-              value={formData.completedDate}
-              onChange={(e) => setFormData({ ...formData, completedDate: e.target.value })}
-              className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            />
+            <div className="relative">
+              <input
+                ref={dateInputRef}
+                type="date"
+                value={formData.completedDate}
+                onChange={(e) => setFormData({ ...formData, completedDate: e.target.value })}
+                max={new Date().toISOString().split('T')[0]}
+                className="w-full rounded-lg border border-input bg-card px-4 py-2.5 pr-10 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                placeholder="Select date"
+              />
+              <button
+                type="button"
+                onClick={() => dateInputRef.current?.showPicker()}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Open calendar"
+              >
+                <Calendar className="h-4 w-4" />
+              </button>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              When was this project completed? Click the calendar icon to select a date.
+            </p>
           </div>
         </div>
 

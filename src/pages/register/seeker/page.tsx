@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { useApp } from "@/contexts/app-context";
 import { locations } from "@/lib/data";
+import { GoogleSignInButton } from "@/components/google-signin-button";
 
 export default function SeekerRegistrationPage() {
   const { t, registerSeeker, login } = useApp();
@@ -73,6 +74,18 @@ export default function SeekerRegistrationPage() {
                 {error}
               </div>
             )}
+
+            {/* Google Sign-In */}
+            <GoogleSignInButton mode="register" userType="seeker" />
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border"></div>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">Or register with email</span>
+              </div>
+            </div>
 
             <div>
               <label className="mb-1.5 block text-sm font-medium text-foreground">{t("fullName")}</label>

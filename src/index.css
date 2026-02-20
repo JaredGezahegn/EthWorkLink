@@ -95,6 +95,37 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Date input calendar picker styling */
+  input[type="date"] {
+    position: relative;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 1;
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    margin-left: 4px;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 0.8;
+  }
+  
+  /* Firefox date input */
+  input[type="date"]::-moz-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 1;
+  }
+  
+  /* Ensure date input shows calendar icon */
+  input[type="date"]::-webkit-inner-spin-button,
+  input[type="date"]::-webkit-clear-button {
+    display: none;
+  }
 }
 
 @layer utilities {
