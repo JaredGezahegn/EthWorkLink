@@ -1,13 +1,23 @@
 # EthioWorkLink
 
-A platform connecting service seekers with trusted service providers in Ethiopia.
+A platform connecting clients with trusted blue-collar workers and service providers in Ethiopia.
 
 ## Features
 
-- **Service Seekers**: Browse services, request help, apply for jobs
-- **Service Providers**: Showcase portfolio, manage requests, post jobs
+- **Service Seekers**: Browse skilled workers, request services, hire professionals
+- **Service Providers**: Showcase completed work, manage requests, post job openings
 - **Admin Panel**: Manage users, approve companies, view reports
 - **Bilingual**: English and Amharic support
+
+## Service Categories
+
+Focus on blue-collar trades:
+- Electrician
+- Plumbing
+- Construction
+- Cleaning
+- Welding
+- Carpentry
 
 ## Tech Stack
 

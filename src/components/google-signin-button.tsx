@@ -46,6 +46,7 @@ export function GoogleSignInButton({ mode, userType = 'seeker' }: GoogleSignInBu
         if (userType === 'company') {
           registerResult = registerCompany({
             companyName: user.displayName || 'Company Name',
+            ownerName: user.displayName || 'Owner Name',
             email: user.email!,
             password: 'google-oauth',
             category: '',

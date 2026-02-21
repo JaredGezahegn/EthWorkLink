@@ -25,3 +25,10 @@ dist-ssr
 
 # env files
 .env*
+
+#readme files
+GOOGLE-AUTH-SETUP.md
+USER-PRIVILEGES.md
+COMPLETION-SUMMARY.md
+REQUIREMENTS-CHECKLIST.md
+USECASE-CHECKLIST.md
