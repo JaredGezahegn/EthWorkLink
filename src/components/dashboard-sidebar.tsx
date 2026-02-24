@@ -7,6 +7,7 @@ interface SidebarItem {
   label: string;
   href: string;
   icon: LucideIcon;
+  badge?: number; // Optional badge count
 }
 
 interface DashboardSidebarProps {
@@ -36,14 +37,19 @@ export function DashboardSidebar({ title, items, accentColor = "bg-primary" }: D
                     <Link
                       href={item.href}
                       className={cn(
-                        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors relative",
                         isActive
                           ? "bg-sidebar-accent text-sidebar-primary"
                           : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                       )}
                     >
                       <Icon className="h-4 w-4" />
-                      {item.label}
+                      <span className="flex-1">{item.label}</span>
+                      {item.badge !== undefined && item.badge > 0 && (
+                        <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-destructive px-1.5 text-xs font-bold text-destructive-foreground">
+                          {item.badge > 99 ? '99+' : item.badge}
+                        </span>
+                      )}
                     </Link>
                   </li>
                 );
@@ -64,11 +70,18 @@ export function DashboardSidebar({ title, items, accentColor = "bg-primary" }: D
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-2 py-1 text-xs",
+                  "flex flex-col items-center gap-0.5 px-2 py-1 text-xs relative",
                   isActive ? "text-primary" : "text-muted-foreground"
                 )}
               >
-                <Icon className="h-5 w-5" />
+                <div className="relative">
+                  <Icon className="h-5 w-5" />
+                  {item.badge !== undefined && item.badge > 0 && (
+                    <span className="absolute -right-2 -top-2 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground">
+                      {item.badge > 99 ? '99+' : item.badge}
+                    </span>
+                  )}
+                </div>
                 <span className="truncate">{item.label.split(" ").slice(0, 2).join(" ")}</span>
               </Link>
             );

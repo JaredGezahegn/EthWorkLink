@@ -81,6 +81,7 @@ export interface ServiceRequest {
   date: string;
   message?: string;
   description?: string; // Service requirements description
+  read?: boolean; // Track if company has viewed this request
 }
 
 export interface JobApplication {
@@ -133,8 +134,10 @@ interface AppContextType {
   deleteJob: (id: string) => void;
   
   // Actions - Service Requests
-  createServiceRequest: (request: Omit<ServiceRequest, "id" | "date" | "status">) => void;
+  createServiceRequest: (request: Omit<ServiceRequest, "id" | "date" | "status" | "read">) => void;
   updateRequestStatus: (id: string, status: RequestStatus) => void;
+  markRequestAsRead: (id: string) => void;
+  markAllRequestsAsRead: (companyId: string) => void;
   getSeekerRequests: (seekerId: string) => ServiceRequest[];
   getCompanyRequests: (companyId: string) => ServiceRequest[];
   
@@ -678,18 +681,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   // Service Request functions
-  const createServiceRequest = (request: Omit<ServiceRequest, "id" | "date" | "status">) => {
+  const createServiceRequest = (request: Omit<ServiceRequest, "id" | "date" | "status" | "read">) => {
     const newRequest: ServiceRequest = {
       ...request,
       id: `request-${Date.now()}`,
       date: new Date().toISOString().split("T")[0],
       status: "pending",
+      read: false, // New requests are unread
     };
     setServiceRequests([...serviceRequests, newRequest]);
   };
 
   const updateRequestStatus = (id: string, status: RequestStatus) => {
     setServiceRequests(serviceRequests.map((r) => (r.id === id ? { ...r, status } : r)));
+  };
+
+  const markRequestAsRead = (id: string) => {
+    setServiceRequests(serviceRequests.map((r) => (r.id === id ? { ...r, read: true } : r)));
+  };
+
+  const markAllRequestsAsRead = (companyId: string) => {
+    setServiceRequests(serviceRequests.map((r) => 
+      r.companyId === companyId ? { ...r, read: true } : r
+    ));
   };
 
   const getSeekerRequests = (seekerId: string) => {
@@ -782,6 +796,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     deleteJob,
     createServiceRequest,
     updateRequestStatus,
+    markRequestAsRead,
+    markAllRequestsAsRead,
     getSeekerRequests,
     getCompanyRequests,
     applyForJob,

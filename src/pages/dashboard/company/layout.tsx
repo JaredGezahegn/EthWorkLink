@@ -4,13 +4,18 @@ import { LayoutDashboard, Wrench, PlusCircle, Inbox, Briefcase, FilePlus, Settin
 import { Link } from "@/components/link";
 
 export default function CompanyDashboardLayout({ children }: { children: React.ReactNode }) {
-  const { language, toggleLanguage, t } = useApp();
+  const { language, toggleLanguage, t, currentUser, getCompanyRequests } = useApp();
+
+  // Get unread requests count (new requests that haven't been viewed)
+  const unreadRequestsCount = currentUser 
+    ? getCompanyRequests(currentUser.id).filter(r => r.read === false).length 
+    : 0;
 
   const items = [
     { label: t("dashboardOverview"), href: "/dashboard/company", icon: LayoutDashboard },
     { label: t("myServices"), href: "/dashboard/company/services", icon: Wrench },
     { label: t("postNewService"), href: "/dashboard/company/services/new", icon: PlusCircle },
-    { label: t("serviceRequests"), href: "/dashboard/company/requests", icon: Inbox },
+    { label: t("serviceRequests"), href: "/dashboard/company/requests", icon: Inbox, badge: unreadRequestsCount },
     { label: t("myJobs"), href: "/dashboard/company/jobs", icon: Briefcase },
     { label: t("postNewJob"), href: "/dashboard/company/jobs/new", icon: FilePlus },
     { label: t("companyProfileSettings"), href: "/dashboard/company/profile", icon: Settings },

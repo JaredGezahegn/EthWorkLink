@@ -3,15 +3,23 @@ import { useApp } from "@/contexts/app-context";
 import { StatusBadge } from "@/components/status-badge";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
 import { ToastContainer } from "@/components/toast";
+import { useEffect } from "react";
 
 export default function CompanyRequestsPage() {
-  const { t, currentUser, getCompanyRequests, updateRequestStatus } = useApp();
+  const { t, currentUser, getCompanyRequests, updateRequestStatus, markAllRequestsAsRead } = useApp();
   const navigate = useNavigate();
   const { toasts, removeToast, success, warning } = useToastNotifications();
 
   if (!currentUser) return null;
 
   const requests = getCompanyRequests(currentUser.id);
+
+  // Mark all requests as read when page loads
+  useEffect(() => {
+    if (currentUser) {
+      markAllRequestsAsRead(currentUser.id);
+    }
+  }, [currentUser, markAllRequestsAsRead]);
 
   const handleAccept = (id: string) => {
     updateRequestStatus(id, "accepted");
