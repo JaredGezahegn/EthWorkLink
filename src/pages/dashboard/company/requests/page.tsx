@@ -1,8 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import { useApp } from "@/contexts/app-context";
 import { StatusBadge } from "@/components/status-badge";
+import { useToastNotifications } from "@/hooks/use-toast-notifications";
+import { ToastContainer } from "@/components/toast";
 
 export default function CompanyRequestsPage() {
   const { t, currentUser, getCompanyRequests, updateRequestStatus } = useApp();
+  const navigate = useNavigate();
+  const { toasts, removeToast, success, warning } = useToastNotifications();
 
   if (!currentUser) return null;
 
@@ -10,16 +15,29 @@ export default function CompanyRequestsPage() {
 
   const handleAccept = (id: string) => {
     updateRequestStatus(id, "accepted");
+    success("Service request accepted successfully!");
   };
 
-  const handleReject = (id: string) => {
-    if (confirm("Are you sure you want to reject this request?")) {
-      updateRequestStatus(id, "rejected");
-    }
+  const handleReject = (id: string, seekerName: string) => {
+    warning(`Are you sure you want to reject ${seekerName}'s request?`);
+    // Show confirmation dialog
+    setTimeout(() => {
+      const confirmed = confirm(`Reject request from ${seekerName}?`);
+      if (confirmed) {
+        updateRequestStatus(id, "rejected");
+        success("Service request rejected");
+      }
+    }, 100);
   };
 
-  const handleComplete = (id: string) => {
+  const handleComplete = (id: string, serviceName: string) => {
     updateRequestStatus(id, "completed");
+    success(`Service "${serviceName}" marked as completed! Add it to your portfolio.`);
+    
+    // Redirect to portfolio creation page after 1.5 seconds
+    setTimeout(() => {
+      navigate("/dashboard/company/services/new");
+    }, 1500);
   };
 
   return (
@@ -28,6 +46,11 @@ export default function CompanyRequestsPage() {
       <p className="mt-1 text-sm text-muted-foreground">
         {requests.length} request{requests.length !== 1 ? 's' : ''}
       </p>
+
+      {/* Toast notifications appear here, near the content */}
+      <div className="mt-4">
+        <ToastContainer toasts={toasts} onRemove={removeToast} />
+      </div>
 
       {requests.length === 0 ? (
         <div className="mt-8 rounded-xl border-2 border-dashed border-border bg-muted/50 p-12 text-center">
@@ -73,7 +96,7 @@ export default function CompanyRequestsPage() {
                           Accept
                         </button>
                         <button
-                          onClick={() => handleReject(req.id)}
+                          onClick={() => handleReject(req.id, req.seekerName)}
                           className="rounded-md border border-destructive/30 px-3 py-1 text-xs font-medium text-destructive hover:bg-destructive/10"
                         >
                           Reject
@@ -82,7 +105,7 @@ export default function CompanyRequestsPage() {
                     )}
                     {req.status === "accepted" && (
                       <button
-                        onClick={() => handleComplete(req.id)}
+                        onClick={() => handleComplete(req.id, req.serviceName)}
                         className="rounded-md bg-success px-3 py-1 text-xs font-medium text-success-foreground hover:opacity-90"
                       >
                         Mark Complete

@@ -5,10 +5,13 @@ import { Footer } from "@/components/footer";
 import { StarRating } from "@/components/star-rating";
 import { useApp } from "@/contexts/app-context";
 import { MapPin, Briefcase, Star, Banknote, Image as ImageIcon, MessageSquare } from "lucide-react";
+import { useToastNotifications } from "@/hooks/use-toast-notifications";
+import { ToastContainer } from "@/components/toast";
 
 export default function CompanyProfilePage() {
   const { id } = useParams<{ id: string }>();
   const { t, companies, services, jobs, currentUser, createServiceRequest, applyForJob, addReview, getCompanyReviews } = useApp();
+  const { toasts, removeToast, success, error, warning, info } = useToastNotifications();
   const company = companies.find((c) => c.id === id);
   
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -37,17 +40,17 @@ export default function CompanyProfilePage() {
 
   const handleRecruit = () => {
     if (!currentUser) {
-      alert("Please login to request services");
+      error("Please login to request services");
       return;
     }
 
     if ("companyName" in currentUser) {
-      alert("Companies cannot request services");
+      warning("Companies cannot request services");
       return;
     }
 
     if (companyServices.length === 0) {
-      alert("This company has no services available yet");
+      info("This company has no services available yet");
       return;
     }
 
@@ -59,7 +62,7 @@ export default function CompanyProfilePage() {
     if ("companyName" in currentUser) return;
 
     if (requestDescription.trim().length < 10) {
-      alert("Please describe your requirements (minimum 10 characters)");
+      warning("Please describe your requirements (minimum 10 characters)");
       return;
     }
 
@@ -74,19 +77,19 @@ export default function CompanyProfilePage() {
       description: requestDescription.trim(),
     });
 
-    alert("Service request sent successfully!");
+    success("Service request sent successfully!");
     setShowRequestModal(false);
     setRequestDescription("");
   };
 
   const handleApplyJob = (job: typeof companyJobs[0]) => {
     if (!currentUser) {
-      alert("Please login to apply for jobs");
+      error("Please login to apply for jobs");
       return;
     }
 
     if ("companyName" in currentUser) {
-      alert("Companies cannot apply for jobs");
+      warning("Companies cannot apply for jobs");
       return;
     }
 
@@ -99,17 +102,17 @@ export default function CompanyProfilePage() {
       companyId: job.companyId,
     });
 
-    alert("Application submitted successfully!");
+    success("Application submitted successfully!");
   };
 
   const handleOpenReviewForm = (serviceId: string) => {
     if (!currentUser) {
-      alert("Please login to leave a review");
+      error("Please login to leave a review");
       return;
     }
 
     if ("companyName" in currentUser) {
-      alert("Companies cannot leave reviews");
+      warning("Companies cannot leave reviews");
       return;
     }
 
@@ -122,7 +125,7 @@ export default function CompanyProfilePage() {
     if (!selectedServiceId) return;
 
     if (reviewComment.trim().length < 10) {
-      alert("Please write at least 10 characters in your review");
+      warning("Please write at least 10 characters in your review");
       return;
     }
 
@@ -134,7 +137,7 @@ export default function CompanyProfilePage() {
       comment: reviewComment.trim(),
     });
 
-    alert("Review submitted successfully!");
+    success("Review submitted successfully!");
     setShowReviewForm(false);
     setReviewComment("");
     setReviewRating(5);
@@ -148,28 +151,44 @@ export default function CompanyProfilePage() {
         {/* Banner */}
         <div className="bg-gradient-to-r from-sidebar to-primary/80 px-4 py-12 lg:py-16">
           <div className="mx-auto max-w-5xl">
-            <div className="text-xs font-medium uppercase tracking-wide text-sidebar-foreground/70">
-              {company.category}
-            </div>
-            <h1 className="mt-1 text-2xl font-bold text-sidebar-foreground lg:text-3xl">
-              {company.companyName}
-            </h1>
-            <div className="mt-3 flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-1.5 text-sm text-sidebar-foreground/80">
-                <MapPin className="h-4 w-4" />
-                {company.location}
-              </div>
-              {company.rating && (
-                <div className="flex items-center gap-1.5 text-sm text-sidebar-foreground/80">
-                  <Star className="h-4 w-4 fill-warning text-warning" />
-                  {company.rating.toFixed(1)}
-                </div>
+            <div className="flex items-start gap-6">
+              {/* Profile Picture */}
+              {company.profilePicture && (
+                <img
+                  src={company.profilePicture}
+                  alt={company.companyName}
+                  className="h-24 w-24 rounded-full object-cover border-4 border-sidebar-foreground/20 shadow-lg lg:h-32 lg:w-32"
+                />
               )}
+              
+              <div className="flex-1">
+                <div className="text-xs font-medium uppercase tracking-wide text-sidebar-foreground/70">
+                  {company.category}
+                </div>
+                <h1 className="mt-1 text-2xl font-bold text-sidebar-foreground lg:text-3xl">
+                  {company.companyName}
+                </h1>
+                <div className="mt-3 flex flex-wrap items-center gap-4">
+                  <div className="flex items-center gap-1.5 text-sm text-sidebar-foreground/80">
+                    <MapPin className="h-4 w-4" />
+                    {company.location}
+                  </div>
+                  {company.rating && (
+                    <div className="flex items-center gap-1.5 text-sm text-sidebar-foreground/80">
+                      <Star className="h-4 w-4 fill-warning text-warning" />
+                      {company.rating.toFixed(1)}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="mx-auto max-w-5xl px-4 py-8">
+          {/* Toast notifications appear here, near the content */}
+          <ToastContainer toasts={toasts} onRemove={removeToast} />
+          
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Main Content */}
             <div className="lg:col-span-2">

@@ -26,6 +26,17 @@ export function FeaturedSection() {
                 key={company.id}
                 className="flex flex-col rounded-xl border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
               >
+                {/* Profile Picture */}
+                {company.profilePicture && (
+                  <div className="mb-4 flex justify-center">
+                    <img
+                      src={company.profilePicture}
+                      alt={company.companyName}
+                      className="h-20 w-20 rounded-full object-cover border-2 border-primary/20"
+                    />
+                  </div>
+                )}
+                
                 <div className="mb-1 text-xs font-medium uppercase tracking-wide text-primary">
                   {company.category}
                 </div>
