@@ -1,9 +1,10 @@
 import { useState, FormEvent } from "react";
 import { useApp } from "@/contexts/app-context";
 import { locations } from "@/lib/data";
+import { ProfilePictureSelector } from "@/components/profile-picture-selector";
 
 export default function CompanyProfileSettingsPage() {
-  const { t, currentUser } = useApp();
+  const { t, currentUser, updateCompanyProfile } = useApp();
   const [success, setSuccess] = useState(false);
 
   if (!currentUser || !("companyName" in currentUser)) return null;
@@ -14,11 +15,12 @@ export default function CompanyProfileSettingsPage() {
     email: currentUser.email,
     location: currentUser.location,
     description: currentUser.description,
+    profilePicture: currentUser.profilePicture || '',
   });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // In a real app, this would update the company in context
+    updateCompanyProfile(currentUser.id, formData);
     setSuccess(true);
     setTimeout(() => setSuccess(false), 3000);
   };
@@ -33,46 +35,58 @@ export default function CompanyProfileSettingsPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="mt-6 max-w-md flex flex-col gap-4">
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-foreground">{t("companyName")}</label>
-          <input
-            type="text"
-            value={formData.companyName}
-            onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-            className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-          />
+      <form onSubmit={handleSubmit} className="mt-6 max-w-2xl flex flex-col gap-6">
+        {/* Profile Picture Selector */}
+        <ProfilePictureSelector
+          currentPicture={formData.profilePicture}
+          onSelect={(picture) => setFormData({ ...formData, profilePicture: picture })}
+        />
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">{t("companyName")}</label>
+            <input
+              type="text"
+              value={formData.companyName}
+              onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+              className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">{t("ownerName")}</label>
+            <input
+              type="text"
+              value={formData.ownerName}
+              onChange={(e) => setFormData({ ...formData, ownerName: e.target.value })}
+              className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
         </div>
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-foreground">{t("ownerName")}</label>
-          <input
-            type="text"
-            value={formData.ownerName}
-            onChange={(e) => setFormData({ ...formData, ownerName: e.target.value })}
-            className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-          />
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">{t("email")}</label>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">{t("companyLocation")}</label>
+            <select
+              value={formData.location}
+              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              className="w-full appearance-none rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            >
+              {locations.map((loc) => (
+                <option key={loc} value={loc}>{loc}</option>
+              ))}
+            </select>
+          </div>
         </div>
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-foreground">{t("email")}</label>
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-          />
-        </div>
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-foreground">{t("companyLocation")}</label>
-          <select
-            value={formData.location}
-            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-            className="w-full appearance-none rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-          >
-            {locations.map((loc) => (
-              <option key={loc} value={loc}>{loc}</option>
-            ))}
-          </select>
-        </div>
+
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">{t("companyDescription")}</label>
           <textarea

@@ -29,6 +29,7 @@ export interface Company {
   status: CompanyStatus;
   rating?: number;
   suspended?: boolean;
+  profilePicture?: string;
 }
 
 export interface Service {
@@ -147,6 +148,7 @@ interface AppContextType {
   approveCompany: (companyId: string) => void;
   suspendUser: (userId: string) => void;
   suspendCompany: (companyId: string) => void;
+  updateCompanyProfile: (companyId: string, updates: Partial<Company>) => void;
   getStats: () => { totalUsers: number; totalCompanies: number; totalServices: number; totalJobs: number };
 }
 
@@ -453,7 +455,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const [language, setLanguage] = useState<Language>(() => {
     const saved = localStorage.getItem("language");
-    return (saved as Language) || "en";
+    return (saved as Language) || "amh";
   });
 
   const [users, setUsers] = useState<User[]>(initializeUsers);
@@ -734,6 +736,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setCompanies(companies.map((c) => (c.id === companyId ? { ...c, suspended: true } : c)));
   };
 
+  const updateCompanyProfile = (companyId: string, updates: Partial<Company>) => {
+    setCompanies(companies.map((c) => (c.id === companyId ? { ...c, ...updates } : c)));
+    
+    // Update current user if it's the company being updated
+    if (currentUser && 'companyName' in currentUser && currentUser.id === companyId) {
+      const updatedUser = { ...currentUser, ...updates };
+      setCurrentUser(updatedUser);
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    }
+  };
+
   const getStats = () => ({
     totalUsers: users.filter((u) => u.role !== "admin").length,
     totalCompanies: companies.length,
@@ -778,6 +791,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     approveCompany,
     suspendUser,
     suspendCompany,
+    updateCompanyProfile,
     getStats,
   };
 
