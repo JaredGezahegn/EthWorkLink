@@ -30,6 +30,7 @@ export interface Company {
   rating?: number;
   suspended?: boolean;
   profilePicture?: string;
+  subscriptionPlan?: "free" | "monthly" | "sixMonth" | "yearly";
 }
 
 export interface Service {
@@ -103,7 +104,8 @@ interface AppContextType {
   login: (email: string, password: string) => { success: boolean; role?: UserRole; message: string };
   logout: () => void;
   registerSeeker: (data: Omit<User, "id" | "role">) => { success: boolean; message: string };
-  registerCompany: (data: Omit<Company, "id" | "status">) => { success: boolean; message: string };
+  registerCompany: (data: Omit<Company, "id" | "status" | "subscriptionPlan">) => { success: boolean; message: string; companyId?: string };
+  updateCompanySubscription: (companyId: string, plan: "free" | "monthly" | "sixMonth" | "yearly") => void;
   
   // Language
   language: Language;
@@ -563,7 +565,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return { success: true, message: "Registration successful! Please login." };
   };
 
-  const registerCompany = (data: Omit<Company, "id" | "status">) => {
+  const registerCompany = (data: Omit<Company, "id" | "status" | "subscriptionPlan">) => {
     // Check if email exists
     if (companies.some((c) => c.email === data.email)) {
       return { success: false, message: "Email already registered" };
@@ -576,7 +578,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
     };
 
     setCompanies([...companies, newCompany]);
-    return { success: true, message: "Registration successful! Waiting for admin approval." };
+    setCurrentUser(newCompany); // Auto-login after registration
+    return { success: true, message: "Registration successful! Please choose a subscription plan.", companyId: newCompany.id };
+  };
+
+  const updateCompanySubscription = (companyId: string, plan: "free" | "monthly" | "sixMonth" | "yearly") => {
+    setCompanies(companies.map((c) => (c.id === companyId ? { ...c, subscriptionPlan: plan } : c)));
+    
+    // Update current user if it's the company being updated
+    if (currentUser && 'companyName' in currentUser && currentUser.id === companyId) {
+      const updatedUser = { ...currentUser, subscriptionPlan: plan };
+      setCurrentUser(updatedUser);
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    }
   };
 
   // Language functions
@@ -774,6 +788,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     logout,
     registerSeeker,
     registerCompany,
+    updateCompanySubscription,
     language,
     toggleLanguage,
     t,

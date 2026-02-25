@@ -1,21 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { StarRating } from "@/components/star-rating";
 import { useApp } from "@/contexts/app-context";
 import { locations } from "@/lib/data";
 import { MapPin, Building2 } from "lucide-react";
+import { Link } from "@/components/link";
 
 const categories = ["All", "Electrician", "Plumbing", "Construction", "Cleaning", "Welding", "Carpentry"];
 
 export default function ServicesPage() {
   const { t, services, currentUser, createServiceRequest } = useApp();
-  const [category, setCategory] = useState("All");
+  const [searchParams] = useSearchParams();
+  
+  // Get category from URL query parameter and capitalize it
+  const urlCategory = searchParams.get("category");
+  const initialCategory = urlCategory 
+    ? urlCategory.charAt(0).toUpperCase() + urlCategory.slice(1)
+    : "All";
+  
+  const [category, setCategory] = useState(initialCategory);
   const [location, setLocation] = useState("All");
   const [minRating, setMinRating] = useState(0);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedService, setSelectedService] = useState<typeof services[0] | null>(null);
   const [requestDescription, setRequestDescription] = useState("");
+
+  // Update category when URL changes
+  useEffect(() => {
+    if (urlCategory) {
+      const formattedCategory = urlCategory.charAt(0).toUpperCase() + urlCategory.slice(1);
+      if (categories.includes(formattedCategory)) {
+        setCategory(formattedCategory);
+      }
+    }
+  }, [urlCategory]);
 
   const filtered = services.filter((s) => {
     if (category !== "All" && s.category !== category) return false;
@@ -126,9 +146,12 @@ export default function ServicesPage() {
                     key={service.id}
                     className="flex flex-col rounded-xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md"
                   >
-                    <div className="mb-1 text-xs font-medium uppercase tracking-wide text-primary">
+                    <Link
+                      href={`/services?category=${service.category.toLowerCase()}`}
+                      className="mb-1 inline-block text-xs font-medium uppercase tracking-wide text-primary hover:underline"
+                    >
                       {service.category}
-                    </div>
+                    </Link>
                     <h3 className="text-base font-semibold text-foreground">{service.title}</h3>
                     <div className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
                       <Building2 className="h-3.5 w-3.5" />

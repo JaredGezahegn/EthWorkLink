@@ -2,6 +2,7 @@ import { Zap, Droplets, HardHat, Sparkles, Wrench, Hammer } from "lucide-react";
 import { useApp } from "@/contexts/app-context";
 import { serviceCategories } from "@/lib/data";
 import type { TranslationKey } from "@/lib/translations";
+import { Link } from "@/components/link";
 
 const iconMap: Record<string, React.ElementType> = {
   Zap,
@@ -25,8 +26,9 @@ export function CategoriesSection() {
           {serviceCategories.map((cat) => {
             const Icon = iconMap[cat.icon];
             return (
-              <div
+              <Link
                 key={cat.id}
+                href={`/services?category=${cat.id}`}
                 className="group flex cursor-pointer flex-col items-center gap-3 rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md"
               >
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent">
@@ -35,7 +37,7 @@ export function CategoriesSection() {
                 <span className="text-center text-sm font-medium text-foreground group-hover:text-primary">
                   {t(cat.label as TranslationKey)}
                 </span>
-              </div>
+              </Link>
             );
           })}
         </div>

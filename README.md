@@ -18,6 +18,7 @@ Focus on blue-collar trades:
 - Cleaning
 - Welding
 - Carpentry
+- more blue colar works
 
 ## Tech Stack
 
@@ -26,7 +27,8 @@ Focus on blue-collar trades:
 - React Router
 - Tailwind CSS v4
 - shadcn/ui components
-- localStorage for data persistence
+- Firebase Authentication (Google Sign-In)
+ 
 
 ## Getting Started
 
@@ -34,33 +36,29 @@ Focus on blue-collar trades:
 
 - Node.js (v18 or higher)
 - npm or pnpm
+- Firebase account (for Google Sign-In)
 
 ### Installation
 
 ```bash
 # Install dependencies
 npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
 ```
 
-## Test Accounts
+### Firebase Setup (Required for Google Sign-In)
+ 
 
-### Admin
-- Email: `admin@ethioworklink.com`
-- Password: `admin123`
+5. **Start Development Server**
+   ```bash
+   npm run dev
+   ```
 
-### Service Seeker
-- Email: `seeker@test.com`
-- Password: `seeker123`
+6. **Build for Production**
+   ```bash
+   npm run build
+   ```
 
-### Company
-- Email: `company@test.com`
-- Password: `company123`
+For detailed Firebase setup instructions, see [GOOGLE-AUTH-SETUP.md](./GOOGLE-AUTH-SETUP.md)
 
 ## Project Structure
 
@@ -69,13 +67,48 @@ src/
 ├── components/        # Reusable UI components
 ├── contexts/          # Global state management
 ├── pages/            # Page components
-│   ├── dashboard/    # Dashboard pages (admin, company, seeker)
-│   ├── company/      # Company profile pages
-│   ├── services/     # Services listing
-│   └── jobs/         # Jobs listing
-├── lib/              # Utilities and data
-└── hooks/            # Custom React hooks
+## Data Persistence
+
+Currently uses browser localStorage for data storage, including:
+- User accounts
+- Company profiles
+- Services and jobs
+- Requests and applications
+
+**Note**: For production deployment, consider migrating to Firebase Firestore or another database solution for:
+- Cross-device data access
+- Better security
+- Data backup and recovery
+- Scalability
+
+## Authentication
+
+The app supports two authentication methods:
+
+1. **Email/Password**: Traditional registration and login
+2. **Google Sign-In**: OAuth authentication via Firebase
+
+Firebase Authentication handles:
+- User identity verification
+- Secure token management
+- Session persistence
+- Google OAuth flow
+
+## Environment Variables
+
+Required environment variables (stored in `.env`):
+
+```bash
+VITE_FIREBASE_API_KEY          # Firebase API key
+VITE_FIREBASE_AUTH_DOMAIN      # Firebase auth domain
+VITE_FIREBASE_PROJECT_ID       # Firebase project ID
+VITE_FIREBASE_STORAGE_BUCKET   # Firebase storage bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID  # Firebase messaging sender ID
+VITE_FIREBASE_APP_ID           # Firebase app ID
+VITE_FIREBASE_MEASUREMENT_ID   # Firebase measurement ID (optional)
 ```
+
+**Security Note**: Never commit `.env` file to version control. Use `.env.example` as a template.
 
 ## Key Features
 

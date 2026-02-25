@@ -7,6 +7,7 @@ import { useApp } from "@/contexts/app-context";
 import { MapPin, Briefcase, Star, Banknote, Image as ImageIcon, MessageSquare } from "lucide-react";
 import { useToastNotifications } from "@/hooks/use-toast-notifications";
 import { ToastContainer } from "@/components/toast";
+import { Link } from "@/components/link";
 
 export default function CompanyProfilePage() {
   const { id } = useParams<{ id: string }>();
@@ -217,9 +218,12 @@ export default function CompanyProfilePage() {
                           </div>
                         )}
                         <div className="p-4">
-                          <div className="text-xs font-medium uppercase tracking-wide text-primary">
+                          <Link
+                            href={`/services?category=${service.category.toLowerCase()}`}
+                            className="inline-block text-xs font-medium uppercase tracking-wide text-primary hover:underline"
+                          >
                             {service.category}
-                          </div>
+                          </Link>
                           <h3 className="mt-1 text-sm font-semibold text-foreground">{service.title}</h3>
                           <p className="mt-2 text-xs text-muted-foreground line-clamp-2">
                             {service.description}
