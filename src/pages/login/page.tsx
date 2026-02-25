@@ -29,7 +29,7 @@ export default function LoginPage() {
           navigate("/"); // Redirect seeker to home page
           break;
         case "company":
-          navigate("/dashboard/company");
+          navigate("/"); // Redirect company to home page (mobile-friendly)
           break;
         case "admin":
           navigate("/dashboard/admin");

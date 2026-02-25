@@ -32,7 +32,7 @@ export function GoogleSignInButton({ mode, userType = 'seeker' }: GoogleSignInBu
           if (loginResult.role === 'admin') {
             navigate('/dashboard/admin');
           } else if (loginResult.role === 'company') {
-            navigate('/dashboard/company');
+            navigate('/'); // Redirect company to homepage
           } else {
             navigate('/');
           }
@@ -67,7 +67,7 @@ export function GoogleSignInButton({ mode, userType = 'seeker' }: GoogleSignInBu
           login(user.email!, 'google-oauth');
           
           if (userType === 'company') {
-            navigate('/dashboard/company');
+            navigate('/'); // Redirect company to homepage
           } else {
             navigate('/');
           }

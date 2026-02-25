@@ -1,13 +1,13 @@
 import { Link } from "@/components/link";
 import { useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { type LucideIcon } from "lucide-react";
+import { type LucideIcon, Home } from "lucide-react";
 
 interface SidebarItem {
   label: string;
   href: string;
   icon: LucideIcon;
-  badge?: number; // Optional badge count
+  badge?: number;
 }
 
 interface DashboardSidebarProps {
@@ -18,6 +18,21 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ title, items, accentColor = "bg-primary" }: DashboardSidebarProps) {
   const { pathname } = useLocation();
+
+  // Extract post items and regular items
+  const postServiceItem = items.find(item => item.href.includes('/services/new'));
+  const regularItems = items.filter(item => !item.href.includes('/services/new') && !item.href.includes('/jobs/new'));
+
+  // Mobile navigation: Home, Dashboard, Post (3rd), Services, Requests, Jobs, Profile
+  const mobileItems = [
+    { label: "Home", href: "/", icon: Home },
+    regularItems[0], // Dashboard
+    ...(postServiceItem ? [postServiceItem] : []), // Post (3rd position)
+    regularItems[1], // Services
+    regularItems[2], // Requests
+    regularItems[3], // Jobs
+    regularItems[4], // Profile
+  ].filter(Boolean);
 
   return (
     <>
@@ -61,20 +76,25 @@ export function DashboardSidebar({ title, items, accentColor = "bg-primary" }: D
 
       {/* Mobile Bottom Nav */}
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card lg:hidden">
-        <div className="flex items-center justify-around py-2">
-          {items.slice(0, 5).map((item) => {
+        <div className="flex items-center gap-1 overflow-x-auto px-2 py-2 scrollbar-hide">
+          {mobileItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
+            const isPostAction = item.href.includes('/new');
+            
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-2 py-1 text-xs relative",
+                  "flex shrink-0 flex-col items-center gap-0.5 px-3 py-1 text-xs relative",
                   isActive ? "text-primary" : "text-muted-foreground"
                 )}
               >
-                <div className="relative">
+                <div className={cn(
+                  "relative flex items-center justify-center",
+                  isPostAction && "h-10 w-10 rounded-full bg-primary text-primary-foreground -mt-4 shadow-lg"
+                )}>
                   <Icon className="h-5 w-5" />
                   {item.badge !== undefined && item.badge > 0 && (
                     <span className="absolute -right-2 -top-2 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-destructive-foreground">
@@ -82,7 +102,12 @@ export function DashboardSidebar({ title, items, accentColor = "bg-primary" }: D
                     </span>
                   )}
                 </div>
-                <span className="truncate">{item.label.split(" ").slice(0, 2).join(" ")}</span>
+                <span className={cn(
+                  "truncate max-w-[60px]",
+                  isPostAction && "mt-1"
+                )}>
+                  {item.label.split(" ").slice(0, 2).join(" ")}
+                </span>
               </Link>
             );
           })}

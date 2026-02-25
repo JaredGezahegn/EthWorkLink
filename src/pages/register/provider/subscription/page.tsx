@@ -63,7 +63,7 @@ export default function SubscriptionPage() {
   const handleSelectPlan = (planId: string) => {
     if (!currentUser || !('companyName' in currentUser)) return;
     updateCompanySubscription(currentUser.id, planId as "free" | "monthly" | "sixMonth" | "yearly");
-    navigate("/dashboard/company");
+    navigate("/"); // Redirect to homepage after plan selection
   };
 
   if (!currentUser || !('companyName' in currentUser)) {
