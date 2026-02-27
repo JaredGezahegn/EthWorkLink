@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 
 // Types
 export type UserRole = "seeker" | "company" | "admin";
-export type Language = "en" | "amh";
+export type Language = "en" | "am"; // Changed from "amh" to "am"
 export type RequestStatus = "pending" | "accepted" | "rejected" | "completed";
 export type ApplicationStatus = "applied" | "reviewing" | "accepted" | "rejected";
 export type CompanyStatus = "pending" | "approved" | "suspended";
@@ -460,7 +460,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const [language, setLanguage] = useState<Language>(() => {
     const saved = localStorage.getItem("language");
-    return (saved as Language) || "amh";
+    return (saved as Language) || "am"; // Default to Amharic
   });
 
   const [users, setUsers] = useState<User[]>(initializeUsers);

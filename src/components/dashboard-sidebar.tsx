@@ -76,7 +76,7 @@ export function DashboardSidebar({ title, items, accentColor = "bg-primary" }: D
 
       {/* Mobile Bottom Nav */}
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card lg:hidden">
-        <div className="flex items-center gap-1 overflow-x-auto px-2 py-2 scrollbar-hide">
+        <div className="flex items-center gap-1 overflow-x-auto px-2 py-2 scrollbar-hide snap-x snap-mandatory">
           {mobileItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -87,7 +87,9 @@ export function DashboardSidebar({ title, items, accentColor = "bg-primary" }: D
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex shrink-0 flex-col items-center gap-0.5 px-3 py-1 text-xs relative",
+                  "flex shrink-0 flex-col items-center gap-0.5 py-1 text-xs relative snap-start",
+                  "w-[calc(20%-0.25rem)]", // 5 items visible (20% each with gap)
+                  "px-2",
                   isActive ? "text-primary" : "text-muted-foreground"
                 )}
               >
@@ -103,7 +105,7 @@ export function DashboardSidebar({ title, items, accentColor = "bg-primary" }: D
                   )}
                 </div>
                 <span className={cn(
-                  "truncate max-w-[60px]",
+                  "truncate max-w-[60px] text-center",
                   isPostAction && "mt-1"
                 )}>
                   {item.label.split(" ").slice(0, 2).join(" ")}

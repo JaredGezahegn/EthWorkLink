@@ -186,7 +186,7 @@ export default function ServicesPage() {
               </div>
               {filtered.length === 0 && (
                 <div className="py-12 text-center text-muted-foreground">
-                  No services found matching your filters.
+                  {t("noServicesFound")}
                 </div>
               )}
             </div>
@@ -228,14 +228,14 @@ export default function ServicesPage() {
                 }}
                 className="flex-1 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 onClick={handleSubmitRequest}
                 disabled={requestDescription.trim().length < 10}
                 className="flex-1 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
               >
-                Send Request
+                {t("sendRequest")}
               </button>
             </div>
           </div>
