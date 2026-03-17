@@ -3,9 +3,10 @@ import { useState } from "react";
 import { Menu, X, User, LogOut, LayoutDashboard } from "lucide-react";
 import { useApp } from "@/contexts/app-context";
 import { useNavigate } from "react-router-dom";
+import { LanguageToggle } from "@/components/language-toggle";
 
 export function Navbar() {
-  const { language, toggleLanguage, t, currentUser, logout } = useApp();
+  const { t, currentUser, logout } = useApp();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -100,19 +101,14 @@ export function Navbar() {
               </Link>
               <Link
                 href="/register"
-                className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+                className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
               >
                 {t("register")}
               </Link>
             </>
           )}
 
-          <button
-            onClick={toggleLanguage}
-            className="rounded-md border border-border px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted"
-          >
-            {language === "en" ? "EN | አማ" : "አማ | EN"}
-          </button>
+          <LanguageToggle />
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -180,12 +176,7 @@ export function Navbar() {
               </>
             )}
 
-            <button
-              onClick={toggleLanguage}
-              className="rounded-md border border-border px-3 py-1.5 text-xs font-semibold text-foreground"
-            >
-              {language === "en" ? "EN | አማ" : "አማ | EN"}
-            </button>
+            <LanguageToggle />
           </div>
         </div>
       )}

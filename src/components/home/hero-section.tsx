@@ -2,6 +2,15 @@ import { Search, MapPin } from "lucide-react";
 import { useApp } from "@/contexts/app-context";
 import { locations } from "@/lib/data";
 import { AnimatedBackground } from "./animated-background";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function HeroSection() {
   const { t } = useApp();
@@ -21,34 +30,34 @@ export function HeroSection() {
 
         <div className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <input
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
+            <Input
               type="text"
               placeholder={t("searchPlaceholder")}
-              className="w-full rounded-lg border-0 bg-card py-3 pl-10 pr-4 text-sm text-foreground shadow-lg placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full border-0 bg-card pl-10 pr-4 shadow-lg"
             />
           </div>
-          <div className="relative sm:w-48">
-            <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <select
-              className="w-full appearance-none rounded-lg border-0 bg-card py-3 pl-10 pr-8 text-sm text-foreground shadow-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                {t("locationPlaceholder")}
-              </option>
-              {locations.map((loc) => (
-                <option key={loc} value={loc}>
-                  {loc}
-                </option>
-              ))}
-            </select>
+          <div className="sm:w-48">
+            <Select>
+              <SelectTrigger className="w-full border-0 bg-card shadow-lg">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <SelectValue placeholder={t("locationPlaceholder")} />
+              </SelectTrigger>
+              <SelectContent>
+                {locations.map((loc) => (
+                  <SelectItem key={loc} value={loc}>
+                    {loc}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <button className="rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg hover:opacity-90">
+          <Button className="shadow-lg">
             {t("search")}
-          </button>
+          </Button>
         </div>
       </div>
     </section>
   );
 }
+

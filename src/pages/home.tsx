@@ -35,7 +35,7 @@ export default function HomePage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
-      <main className="flex-1 pb-20 lg:pb-0">
+      <main className={cn("flex-1 lg:pb-0", isCompany && "pb-20")}>
         <HeroSection />
         <CategoriesSection />
         <FeaturedSection />

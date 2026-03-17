@@ -6,6 +6,8 @@ import { Footer } from "@/components/footer";
 import { useApp } from "@/contexts/app-context";
 import { DebugAccounts } from "@/components/debug-accounts";
 import { GoogleSignInButton } from "@/components/google-signin-button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const { t, login } = useApp();
@@ -72,34 +74,32 @@ export default function LoginPage() {
 
             <div>
               <label className="mb-1.5 block text-sm font-medium text-foreground">{t("email")}</label>
-              <input
+              <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 placeholder={t("email")}
               />
             </div>
             <div>
               <label className="mb-1.5 block text-sm font-medium text-foreground">{t("password")}</label>
-              <input
+              <Input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 placeholder={t("password")}
               />
             </div>
 
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-primary py-3 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+              className="w-full"
             >
               {loading ? "Logging in..." : t("loginButton")}
-            </button>
+            </Button>
 
             {/* Test accounts hint */}
             <div className="rounded-lg bg-muted/50 px-4 py-3 text-xs text-muted-foreground">
