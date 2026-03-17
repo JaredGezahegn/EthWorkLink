@@ -33,7 +33,7 @@ export default function CompanyJobsPage() {
         <h1 className="text-xl font-bold text-foreground lg:text-2xl">{t("myJobs")}</h1>
         <Link
           href="/dashboard/company/jobs/new"
-          className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground hover:opacity-90"
+          className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground hover:bg-primary/90"
         >
           Post New Job
         </Link>
@@ -48,7 +48,7 @@ export default function CompanyJobsPage() {
           </p>
           <Link
             href="/dashboard/company/jobs/new"
-            className="mt-4 inline-block rounded-lg bg-secondary px-6 py-2 text-sm font-medium text-secondary-foreground hover:opacity-90"
+            className="mt-4 inline-block rounded-lg bg-secondary px-6 py-2 text-sm font-medium text-secondary-foreground hover:bg-primary/90"
           >
             Post Your First Job
           </Link>
@@ -110,7 +110,7 @@ export default function CompanyJobsPage() {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleAcceptApplication(app.id)}
-                            className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90"
+                            className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                           >
                             Accept
                           </button>

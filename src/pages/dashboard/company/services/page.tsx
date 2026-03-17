@@ -25,7 +25,7 @@ export default function CompanyServicesPage() {
         </div>
         <Link
           href="/dashboard/company/services/new"
-          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
         >
           Add New Project
         </Link>
@@ -40,7 +40,7 @@ export default function CompanyServicesPage() {
           </p>
           <Link
             href="/dashboard/company/services/new"
-            className="mt-4 inline-block rounded-lg bg-primary px-6 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+            className="mt-4 inline-block rounded-lg bg-primary px-6 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             Add Your First Project
           </Link>

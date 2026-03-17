@@ -7,6 +7,15 @@ import { useApp } from "@/contexts/app-context";
 import { locations } from "@/lib/data";
 import { MapPin, Building2 } from "lucide-react";
 import { Link } from "@/components/link";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
 
 const categories = ["All", "Electrician", "Plumbing", "Construction", "Cleaning", "Welding", "Carpentry"];
 
@@ -46,12 +55,12 @@ export default function ServicesPage() {
 
   const handleOpenRequestModal = (service: typeof services[0]) => {
     if (!currentUser) {
-      alert("Please login to request services");
+      toast.error("Please login to request services");
       return;
     }
 
     if ("companyName" in currentUser) {
-      alert("Companies cannot request services");
+      toast.error("Companies cannot request services");
       return;
     }
 
@@ -64,7 +73,7 @@ export default function ServicesPage() {
     if ("companyName" in currentUser) return;
 
     if (requestDescription.trim().length < 10) {
-      alert("Please describe your requirements (minimum 10 characters)");
+      toast.warning("Please describe your requirements (minimum 10 characters)");
       return;
     }
 
@@ -78,7 +87,7 @@ export default function ServicesPage() {
       description: requestDescription.trim(),
     });
 
-    alert("Service request sent successfully!");
+    toast.success("Service request sent successfully!");
     setShowRequestModal(false);
     setRequestDescription("");
     setSelectedService(null);
@@ -98,41 +107,44 @@ export default function ServicesPage() {
                 <div className="flex flex-col gap-5">
                   <div>
                     <h3 className="mb-2 text-sm font-semibold text-foreground">{t("filterByCategory")}</h3>
-                    <select
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                      className="w-full rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
-                    >
-                      <option value="All">{t("allCategories")}</option>
-                      {categories.slice(1).map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
+                    <Select value={category} onValueChange={setCategory}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder={t("allCategories")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="All">{t("allCategories")}</SelectItem>
+                        {categories.slice(1).map((c) => (
+                          <SelectItem key={c} value={c}>{c}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
                     <h3 className="mb-2 text-sm font-semibold text-foreground">{t("filterByLocation")}</h3>
-                    <select
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="w-full rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
-                    >
-                      <option value="All">{t("allLocations")}</option>
-                      {locations.map((loc) => (
-                        <option key={loc} value={loc}>{loc}</option>
-                      ))}
-                    </select>
+                    <Select value={location} onValueChange={setLocation}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder={t("allLocations")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="All">{t("allLocations")}</SelectItem>
+                        {locations.map((loc) => (
+                          <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
                     <h3 className="mb-2 text-sm font-semibold text-foreground">{t("filterByRating")}</h3>
-                    <select
-                      value={minRating}
-                      onChange={(e) => setMinRating(Number(e.target.value))}
-                      className="w-full rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
-                    >
-                      <option value={0}>{t("anyRating")}</option>
-                      <option value={4}>{"4+ Stars"}</option>
-                      <option value={4.5}>{"4.5+ Stars"}</option>
-                    </select>
+                    <Select value={String(minRating)} onValueChange={(v) => setMinRating(Number(v))}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder={t("anyRating")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="0">{t("anyRating")}</SelectItem>
+                        <SelectItem value="4">{"4+ Stars"}</SelectItem>
+                        <SelectItem value="4.5">{"4.5+ Stars"}</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </div>
@@ -174,12 +186,13 @@ export default function ServicesPage() {
                       </div>
                     )}
                     <div className="mt-auto pt-4">
-                      <button
+                      <Button
                         onClick={() => handleOpenRequestModal(service)}
-                        className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+                        className="w-full"
+                        size="sm"
                       >
                         {t("recruitButton")}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -220,23 +233,24 @@ export default function ServicesPage() {
             </div>
 
             <div className="mt-6 flex gap-3">
-              <button
+              <Button
+                variant="outline"
+                className="flex-1"
                 onClick={() => {
                   setShowRequestModal(false);
                   setRequestDescription("");
                   setSelectedService(null);
                 }}
-                className="flex-1 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
               >
                 {t("cancel")}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleSubmitRequest}
                 disabled={requestDescription.trim().length < 10}
-                className="flex-1 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
+                className="flex-1"
               >
                 {t("sendRequest")}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -246,5 +260,3 @@ export default function ServicesPage() {
     </div>
   );
 }
-
-

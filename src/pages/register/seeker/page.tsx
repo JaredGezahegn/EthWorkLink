@@ -148,7 +148,7 @@ export default function SeekerRegistrationPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 w-full rounded-lg bg-secondary py-3 text-sm font-semibold text-secondary-foreground hover:opacity-90 disabled:opacity-50"
+              className="mt-2 w-full rounded-lg bg-secondary py-3 text-sm font-semibold text-secondary-foreground hover:bg-primary/90 disabled:opacity-50"
             >
               {loading ? "Registering..." : t("registerButton")}
             </button>

@@ -124,7 +124,7 @@ export default function NewJobPage() {
 
         <button
           type="submit"
-          className="mt-2 rounded-lg bg-secondary px-4 py-2.5 text-sm font-semibold text-secondary-foreground hover:opacity-90"
+          className="mt-2 rounded-lg bg-secondary px-4 py-2.5 text-sm font-semibold text-secondary-foreground hover:bg-primary/90"
         >
           Post Job
         </button>

@@ -65,7 +65,7 @@ export default function AdminOverviewPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleApprove(c.id)}
-                      className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90"
+                      className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                     >
                       Approve
                     </button>

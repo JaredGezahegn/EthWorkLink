@@ -272,7 +272,7 @@ export default function CompanyProfilePage() {
                         </div>
                         <button
                           onClick={() => handleApplyJob(job)}
-                          className="rounded-lg bg-secondary px-4 py-1.5 text-xs font-medium text-secondary-foreground hover:opacity-90"
+                          className="rounded-lg bg-secondary px-4 py-1.5 text-xs font-medium text-secondary-foreground hover:bg-primary/90"
                         >
                           {t("applyButton")}
                         </button>
@@ -322,7 +322,7 @@ export default function CompanyProfilePage() {
                 </div>
                 <button
                   onClick={handleRecruit}
-                  className="mt-6 w-full rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90"
+                  className="mt-6 w-full rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
                 >
                   {t("recruitButton")}
                 </button>
@@ -370,7 +370,7 @@ export default function CompanyProfilePage() {
               <button
                 onClick={handleSubmitRequest}
                 disabled={requestDescription.trim().length < 10}
-                className="flex-1 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
+                className="flex-1 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
               >
                 Send Request
               </button>
@@ -436,7 +436,7 @@ export default function CompanyProfilePage() {
               <button
                 onClick={handleSubmitReview}
                 disabled={reviewComment.trim().length < 10}
-                className="flex-1 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-50"
+                className="flex-1 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
               >
                 Submit Review
               </button>

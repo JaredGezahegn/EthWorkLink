@@ -290,7 +290,7 @@ export default function NewServicePage() {
         <button
           type="submit"
           disabled={uploading}
-          className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+          className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
         >
           <Upload className="h-4 w-4" />
           Add to Portfolio

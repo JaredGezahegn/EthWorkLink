@@ -65,7 +65,7 @@ export default function SeekerProfilePage() {
         </div>
         <button
           type="submit"
-          className="mt-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+          className="mt-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
         >
           Save Changes
         </button>

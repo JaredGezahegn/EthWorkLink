@@ -99,7 +99,7 @@ export default function CompanyRequestsPage() {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleAccept(req.id)}
-                          className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90"
+                          className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                         >
                           Accept
                         </button>
@@ -114,7 +114,7 @@ export default function CompanyRequestsPage() {
                     {req.status === "accepted" && (
                       <button
                         onClick={() => handleComplete(req.id, req.serviceName)}
-                        className="rounded-md bg-success px-3 py-1 text-xs font-medium text-success-foreground hover:opacity-90"
+                        className="rounded-md bg-success px-3 py-1 text-xs font-medium text-success-foreground hover:bg-primary/90"
                       >
                         Mark Complete
                       </button>

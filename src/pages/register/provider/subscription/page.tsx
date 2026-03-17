@@ -145,8 +145,8 @@ export default function SubscriptionPage() {
                   onClick={() => handleSelectPlan(plan.id)}
                   className={`w-full rounded-lg py-2.5 text-sm font-semibold transition-opacity ${
                     plan.highlighted
-                      ? "bg-background text-primary hover:opacity-90"
-                      : "bg-primary text-primary-foreground hover:opacity-90"
+                      ? "bg-background text-primary hover:bg-primary/90"
+                      : "bg-primary text-primary-foreground hover:bg-primary/90"
                   }`}
                 >
                   {plan.id === "free" ? t("getStarted") : t("subscribe")}

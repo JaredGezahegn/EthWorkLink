@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AppProvider } from '@/contexts/app-context'
 import { ProtectedRoute } from '@/components/protected-route'
+import { Toaster } from '@/components/ui/sonner'
 
 // Layouts
 import SeekerDashboardLayout from '@/pages/dashboard/seeker/layout'
@@ -48,6 +49,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <AppProvider>
+        <Toaster />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<HomePage />} />

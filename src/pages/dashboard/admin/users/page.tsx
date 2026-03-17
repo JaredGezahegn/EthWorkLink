@@ -66,7 +66,7 @@ export default function AdminUsersPage() {
                       ) : (
                         <button
                           onClick={() => handleActivate(user.id)}
-                          className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90"
+                          className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                         >
                           Activate
                         </button>

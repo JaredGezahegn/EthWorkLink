@@ -68,7 +68,7 @@ export default function JobsPage() {
                   <div className="mt-auto pt-4">
                     <button
                       onClick={() => handleApply(job)}
-                      className="w-full rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground hover:opacity-90"
+                      className="w-full rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground hover:bg-primary/90"
                     >
                       {t("applyButton")}
                     </button>

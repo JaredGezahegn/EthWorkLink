@@ -305,7 +305,7 @@ export default function EditServicePage() {
           <button
             type="submit"
             disabled={uploading}
-            className="flex-1 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
+            className="flex-1 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
           >
             Update Portfolio
           </button>

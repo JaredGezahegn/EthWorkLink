@@ -62,7 +62,7 @@ export default function AdminCompaniesPage() {
                         <>
                           <button
                             onClick={() => handleApprove(company.id)}
-                            className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90"
+                            className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                           >
                             Approve
                           </button>

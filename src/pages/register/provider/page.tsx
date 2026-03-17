@@ -146,7 +146,7 @@ export default function ProviderRegistrationPage() {
             </div>
             <button
               type="submit"
-              className="mt-2 w-full rounded-lg bg-primary py-3 text-sm font-semibold text-primary-foreground hover:opacity-90"
+              className="mt-2 w-full rounded-lg bg-primary py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
             >
               {t("registerCompany")}
             </button>
