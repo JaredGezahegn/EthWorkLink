@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { translations } from "@/lib/translations";
 
 // Types
 export type UserRole = "seeker" | "company" | "admin";
@@ -159,233 +160,7 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-// Translations
-const translations = {
-  en: {
-    // Navigation
-    login: "Login",
-    register: "Register",
-    logout: "Logout",
-    home: "Home",
-    services: "Services",
-    jobs: "Jobs",
-    
-    // Search
-    search: "Search",
-    searchPlaceholder: "Search services...",
-    locationPlaceholder: "Select Location",
-    
-    // Actions
-    apply: "Apply",
-    recruit: "Recruit",
-    applyButton: "Apply",
-    recruitButton: "Recruit",
-    viewProfile: "View Profile",
-    
-    // Status
-    pending: "Pending",
-    accepted: "Accepted",
-    rejected: "Rejected",
-    completed: "Completed",
-    approved: "Approved",
-    suspended: "Suspended",
-    applied: "Applied",
-    reviewing: "Reviewing",
-    active: "Active",
-    
-    // Hero Section
-    heroTitle: "Find Trusted Blue-Collar Workers in Ethiopia",
-    heroSubtitle: "Connect with skilled electricians, plumbers, construction workers, and more for all your service needs",
-    
-    // Categories
-    serviceCategories: "Service Categories",
-    electrician: "Electrician",
-    plumbing: "Plumbing",
-    construction: "Construction",
-    cleaning: "Cleaning",
-    welding: "Welding",
-    carpentry: "Carpentry",
-    
-    // Featured
-    featuredCompanies: "Featured Companies",
-    
-    // Registration
-    registerAs: "Register As",
-    serviceSeeker: "Service Seeker",
-    serviceSeekerDesc: "Looking for skilled workers? Register as a seeker to find and hire trusted blue-collar professionals.",
-    serviceProvider: "Service Provider Company",
-    serviceProviderDesc: "Offer blue-collar services? Register your company to reach thousands of clients seeking skilled workers.",
-    
-    // Form Fields
-    fullName: "Full Name",
-    email: "Email",
-    password: "Password",
-    confirmPassword: "Confirm Password",
-    location: "Location",
-    companyName: "Company Name",
-    ownerName: "Owner / Representative Name",
-    serviceCategory: "Service Categories",
-    companyLocation: "Company Location",
-    companyDescription: "Company Description",
-    description: "Description",
-    
-    // Buttons
-    registerButton: "Register",
-    registerCompany: "Register Company",
-    loginButton: "Login",
-    loginTitle: "Welcome Back",
-    loginSubtitle: "Sign in to your account",
-    
-    // Dashboard - Common
-    dashboardOverview: "Dashboard Overview",
-    profile: "Profile",
-    settings: "Settings",
-    
-    // Dashboard - Seeker
-    myServiceRequests: "My Service Requests",
-    myJobApplications: "My Job Applications",
-    myReviews: "My Reviews",
-    
-    // Dashboard - Company
-    myServices: "My Services",
-    postNewService: "Post New Service",
-    serviceRequests: "Service Requests",
-    myJobs: "My Jobs",
-    postNewJob: "Post New Job",
-    companyProfileSettings: "Company Profile & Settings",
-    
-    // Dashboard - Admin
-    manageUsers: "Manage Users",
-    manageCompanies: "Manage Companies",
-    manageServices: "Manage Services",
-    manageJobs: "Manage Jobs",
-    reports: "Reports",
-    systemSettings: "System Settings",
-    
-    // Table Headers
-    company: "Company",
-    date: "Date",
-    status: "Status",
-    servicesOffered: "Services Offered",
-    activeJobPosts: "Active Job Posts",
-    reviews: "Reviews",
-    
-    // Other
-    rating: "Rating",
-  },
-  amh: {
-    // Navigation
-    login: "ግባ",
-    register: "ተመዝገብ",
-    logout: "ውጣ",
-    home: "መነሻ",
-    services: "አገልግሎቶች",
-    jobs: "ስራዎች",
-    
-    // Search
-    search: "ፈልግ",
-    searchPlaceholder: "አገልግሎቶችን ፈልግ...",
-    locationPlaceholder: "ቦታ ምረጥ",
-    
-    // Actions
-    apply: "አመልክት",
-    recruit: "ቅጥር",
-    applyButton: "አመልክት",
-    recruitButton: "ቅጥር",
-    viewProfile: "መገለጫ ይመልከቱ",
-    
-    // Status
-    pending: "በመጠባበቅ ላይ",
-    accepted: "ተቀባይነት አግኝቷል",
-    rejected: "ውድቅ ሆኗል",
-    completed: "ተጠናቋል",
-    approved: "ጸድቋል",
-    suspended: "ታግዷል",
-    applied: "አመልክቷል",
-    reviewing: "በመገምገም ላይ",
-    active: "ንቁ",
-    
-    // Hero Section
-    heroTitle: "በኢትዮጵያ ውስጥ የታመኑ ሰለጠኑ ሰራተኞችን ያግኙ",
-    heroSubtitle: "ለሁሉም የአገልግሎት ፍላጎቶችዎ ከሰለጠኑ ኤሌክትሪሺያኖች፣ የቧንቧ ባለሙያዎች፣ የግንባታ ሰራተኞች እና ሌሎች ጋር ይገናኙ",
-    
-    // Categories
-    serviceCategories: "የአገልግሎት ምድቦች",
-    electrician: "ኤሌክትሪሺያን",
-    plumbing: "የቧንቧ ስራ",
-    construction: "ግንባታ",
-    cleaning: "ጽዳት",
-    welding: "ብረት ስራ",
-    carpentry: "የእንጨት ስራ",
-    
-    // Featured
-    featuredCompanies: "ተመራጭ ኩባንያዎች",
-    
-    // Registration
-    registerAs: "እንደ ተመዝገብ",
-    serviceSeeker: "አገልግሎት ፈላጊ",
-    serviceSeekerDesc: "የሰለጠኑ ሰራተኞችን እየፈለጉ ነው? የታመኑ ሰለጠኑ ሰራተኞችን ለማግኘት እና ለመቅጠር እንደ ፈላጊ ይመዝገቡ።",
-    serviceProvider: "የአገልግሎት አቅራቢ ኩባንያ",
-    serviceProviderDesc: "የሰለጠኑ ሰራተኞች አገልግሎት ይሰጣሉ? ሰለጠኑ ሰራተኞችን የሚፈልጉ በሺዎች የሚቆጠሩ ደንበኞችን ለማግኘት ኩባንያዎን ይመዝገቡ።",
-    
-    // Form Fields
-    fullName: "ሙሉ ስም",
-    email: "ኢሜይል",
-    password: "የይለፍ ቃል",
-    confirmPassword: "የይለፍ ቃል አረጋግጥ",
-    location: "ቦታ",
-    companyName: "የኩባንያ ስም",
-    ownerName: "ባለቤት / ተወካይ ስም",
-    serviceCategory: "የአገልግሎት ምድቦች",
-    companyLocation: "የኩባንያ ቦታ",
-    companyDescription: "የኩባንያ መግለጫ",
-    description: "መግለጫ",
-    
-    // Buttons
-    registerButton: "ተመዝገብ",
-    registerCompany: "ኩባንያ ተመዝገብ",
-    loginButton: "ግባ",
-    loginTitle: "እንኳን ደህና መጡ",
-    loginSubtitle: "ወደ መለያዎ ይግቡ",
-    
-    // Dashboard - Common
-    dashboardOverview: "የዳሽቦርድ አጠቃላይ እይታ",
-    profile: "መገለጫ",
-    settings: "ቅንብሮች",
-    
-    // Dashboard - Seeker
-    myServiceRequests: "የእኔ የአገልግሎት ጥያቄዎች",
-    myJobApplications: "የእኔ የስራ ማመልከቻዎች",
-    myReviews: "የእኔ ግምገማዎች",
-    
-    // Dashboard - Company
-    myServices: "የእኔ አገልግሎቶች",
-    postNewService: "አዲስ አገልግሎት ለጥፍ",
-    serviceRequests: "የአገልግሎት ጥያቄዎች",
-    myJobs: "የእኔ ስራዎች",
-    postNewJob: "አዲስ ስራ ለጥፍ",
-    companyProfileSettings: "የኩባንያ መገለጫ እና ቅንብሮች",
-    
-    // Dashboard - Admin
-    manageUsers: "ተጠቃሚዎችን አስተዳድር",
-    manageCompanies: "ኩባንያዎችን አስተዳድር",
-    manageServices: "አገልግሎቶችን አስተዳድር",
-    manageJobs: "ስራዎችን አስተዳድር",
-    reports: "ሪፖርቶች",
-    systemSettings: "የስርዓት ቅንብሮች",
-    
-    // Table Headers
-    company: "ኩባንያ",
-    date: "ቀን",
-    status: "ሁኔታ",
-    servicesOffered: "የሚሰጡ አገልግሎቶች",
-    activeJobPosts: "ንቁ የስራ ማስታወቂያዎች",
-    reviews: "ግምገማዎች",
-    
-    // Other
-    rating: "ደረጃ",
-  },
-};
+// Translations import used for t() via @/lib/translations
 
 // Initial admin user
 const initialAdmin: User = {
@@ -595,13 +370,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   // Language functions
   const toggleLanguage = () => {
-    setLanguage((prev) => (prev === "en" ? "amh" : "en"));
+    setLanguage((prev) => (prev === "en" ? "am" : "en"));
   };
 
   const t = (key: string): string => {
-    const translation = translations[language];
-    if (!translation) return key;
-    return (translation as any)[key] || key;
+    const translationArea = (translations as any)[language];
+    if (!translationArea) return key;
+    return translationArea[key] || key;
   };
 
   // Service functions

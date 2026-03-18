@@ -11,10 +11,11 @@ import { Badge } from "@/components/ui/badge";
 
 interface Plan {
   id: string;
-  nameKey: TranslationKey;
-  priceKey: TranslationKey;
-  periodKey: TranslationKey;
+  name: string;
+  price: string;
+  period: string;
   features: TranslationKey[];
+  image: string;
   badge?: TranslationKey;
   highlighted?: boolean;
 }
@@ -22,34 +23,38 @@ interface Plan {
 const plans: Plan[] = [
   {
     id: "free",
-    nameKey: "freePlan",
-    priceKey: "freePlanPrice",
-    periodKey: "forever",
+    name: "Basic",
+    price: "0 Birr",
+    period: "for a month!",
     features: ["freeFeature1", "freeFeature2", "freeFeature3", "freeFeature4"],
+    image: "/illustrations/plans/free.png",
   },
   {
     id: "monthly",
-    nameKey: "monthlyPlan",
-    priceKey: "monthlyPlanPrice",
-    periodKey: "perMonth",
+    name: "Comfort",
+    price: "499 Birr",
+    period: "Per Month",
     features: ["monthlyFeature1", "monthlyFeature2", "monthlyFeature3", "monthlyFeature4", "monthlyFeature5"],
+    image: "/illustrations/plans/monthly.png",
   },
   {
     id: "sixMonth",
-    nameKey: "sixMonthPlan",
-    priceKey: "sixMonthPlanPrice",
-    periodKey: "perSixMonths",
+    name: "Premium",
+    price: "2,499 Birr",
+    period: "Per 6 Months",
     badge: "mostPopular",
     highlighted: true,
     features: ["sixMonthFeature1", "sixMonthFeature2", "sixMonthFeature3", "sixMonthFeature4", "sixMonthFeature5", "sixMonthFeature6"],
+    image: "/illustrations/plans/sixmonth.png",
   },
   {
     id: "yearly",
-    nameKey: "yearlyPlan",
-    priceKey: "yearlyPlanPrice",
-    periodKey: "perYear",
+    name: "Enterprise",
+    price: "3,999 Birr",
+    period: "Per Year",
     badge: "bestValue",
     features: ["yearlyFeature1", "yearlyFeature2", "yearlyFeature3", "yearlyFeature4", "yearlyFeature5", "yearlyFeature6", "yearlyFeature7"],
+    image: "/illustrations/plans/yearly.png",
   },
 ];
 
@@ -74,18 +79,18 @@ export default function SubscriptionPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-muted/30">
       <Navbar />
       <main className="flex-1 px-4 py-16 lg:py-24">
         <div className="mx-auto max-w-7xl">
           {/* Header */}
           <div className="mb-6 flex justify-center">
-            <Badge variant="secondary" className="px-4 py-1.5 text-sm font-medium shadow-sm">
+            <Badge variant="secondary" className="px-4 py-1.5 text-sm font-medium shadow-sm text-foreground">
               <Check className="mr-2 h-4 w-4 text-primary" />
               {t("registrationComplete")}
             </Badge>
           </div>
-          
+
           <h1 className="text-center text-3xl font-extrabold tracking-tight text-foreground lg:text-5xl">
             {t("chooseYourPlan")}
           </h1>
@@ -98,56 +103,62 @@ export default function SubscriptionPage() {
             {plans.map((plan) => (
               <Card
                 key={plan.id}
-                className={`relative flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
-                  plan.highlighted
-                    ? "border-primary shadow-lg ring-2 ring-primary/20 scale-105 sm:scale-100 lg:scale-105 z-10"
-                    : "border-border shadow-sm hover:border-primary/50"
-                }`}
+                className={`relative flex flex-col pt-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl bg-background border-none shadow-md rounded-[2rem] overflow-hidden ${plan.highlighted ? "ring-2 ring-primary/40 scale-105 sm:scale-100 lg:scale-105 z-10" : ""
+                  }`}
               >
                 {/* Badge */}
                 {plan.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <Badge variant={plan.highlighted ? "default" : "secondary"} className="shadow-md font-semibold px-3 py-1 text-xs uppercase tracking-wider">
+                  <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
+                    <Badge variant={plan.highlighted ? "default" : "secondary"} className="shadow-md font-semibold px-4 py-1.5 text-[10px] uppercase tracking-wider rounded-full">
                       {t(plan.badge)}
                     </Badge>
                   </div>
                 )}
-                
-                <CardHeader className="text-center pb-4 pt-8">
-                  <CardTitle className={`text-2xl font-bold ${plan.highlighted ? "text-primary" : "text-foreground"}`}>
-                    {t(plan.nameKey)}
+
+                {/* Illustration */}
+                <div className="px-6 flex justify-center mt-2 h-48 w-full items-center">
+                  <img src={plan.image} alt={plan.id} className="object-contain h-full w-full opacity-95 transition-transform duration-500 hover:scale-110" />
+                </div>
+
+                <CardHeader className="text-center pb-2 pt-6">
+                  <CardTitle className={`text-xl font-black uppercase tracking-widest ${plan.highlighted ? "text-primary/90" : "text-primary/70"}`}>
+                    {plan.name}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex flex-col flex-1 pb-6 px-6">
-                  <div className="mb-6 flex items-baseline justify-center gap-1">
-                    <span className="text-5xl font-extrabold tracking-tight text-foreground">
-                      {t(plan.priceKey)}
-                    </span>
-                    <span className="text-sm font-medium text-muted-foreground ml-1">
-                      {t(plan.periodKey)}
+
+                <CardContent className="flex flex-col flex-1 pb-6 px-6 relative">
+                  {/* Price Centered */}
+                  <div className="flex flex-col items-center justify-center my-4 group">
+                    <div className="flex items-baseline justify-center gap-1">
+                      <span className="text-4xl font-extrabold tracking-tighter text-foreground group-hover:text-primary transition-colors">
+                        {plan.price}
+                      </span>
+                    </div>
+                    <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest mt-1">
+                      {plan.period}
                     </span>
                   </div>
-                  
-                  <div className="my-6 h-px w-full bg-border/60" />
 
-                  <ul className="flex flex-1 flex-col gap-4">
+                  <div className="my-4 mx-8 h-px bg-primary/10 rounded-full" />
+
+                  {/* Features List */}
+                  <ul className="flex flex-1 flex-col gap-3 mt-2 px-2">
                     {plan.features.map((featureKey) => (
-                      <li key={featureKey} className="flex items-start gap-3 text-sm">
-                        <div className={`rounded-full p-1 mt-0.5 ${plan.highlighted ? "bg-primary/10" : "bg-muted"}`}>
-                          <Check className={`h-3.5 w-3.5 shrink-0 ${plan.highlighted ? "text-primary" : "text-muted-foreground"}`} />
-                        </div>
-                        <span className="text-muted-foreground leading-relaxed">
+                      <li key={featureKey} className="flex items-start gap-3 text-[13px] font-medium text-center justify-center">
+                        <span className="text-muted-foreground/90 leading-relaxed text-center">
                           {t(featureKey)}
                         </span>
                       </li>
                     ))}
                   </ul>
                 </CardContent>
-                <CardFooter className="px-6 pb-8 pt-2">
+
+                <CardFooter className="px-8 pb-10 pt-4 bg-gradient-to-t from-muted/20 to-transparent">
                   <Button
                     onClick={() => handleSelectPlan(plan.id)}
-                    variant={plan.highlighted ? "default" : "outline"}
-                    className="w-full text-base font-semibold py-6 shadow-sm hover:shadow-md transition-shadow"
+                    variant={plan.highlighted ? "default" : "secondary"}
+                    className={`w-full text-[13px] font-bold py-6 shadow-sm hover:shadow-md transition-all rounded-xl tracking-widest uppercase ${plan.highlighted ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary hover:bg-primary/20"
+                      }`}
                     size="lg"
                   >
                     {plan.id === "free" ? t("getStarted") : t("subscribe")}
