@@ -5,6 +5,9 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { useApp } from "@/contexts/app-context";
 import type { TranslationKey } from "@/lib/translations";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface Plan {
   id: string;
@@ -71,87 +74,86 @@ export default function SubscriptionPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
-      <main className="flex-1 px-4 py-12 lg:py-16">
+      <main className="flex-1 px-4 py-16 lg:py-24">
         <div className="mx-auto max-w-7xl">
           {/* Header */}
-          <div className="mb-4 flex justify-center">
-            <span className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-accent-foreground">
-              <Check className="h-4 w-4" />
+          <div className="mb-6 flex justify-center">
+            <Badge variant="secondary" className="px-4 py-1.5 text-sm font-medium shadow-sm">
+              <Check className="mr-2 h-4 w-4 text-primary" />
               {t("registrationComplete")}
-            </span>
+            </Badge>
           </div>
           
-          <h1 className="text-center text-2xl font-bold text-foreground lg:text-4xl">
+          <h1 className="text-center text-3xl font-extrabold tracking-tight text-foreground lg:text-5xl">
             {t("chooseYourPlan")}
           </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-muted-foreground lg:text-base">
+          <p className="mx-auto mt-4 max-w-2xl text-center text-base text-muted-foreground lg:text-lg">
             {t("chooseYourPlanDesc")}
           </p>
 
           {/* Plans Grid */}
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {plans.map((plan) => (
-              <div
+              <Card
                 key={plan.id}
-                className={`relative flex flex-col rounded-xl p-6 transition-shadow ${
+                className={`relative flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
                   plan.highlighted
-                    ? "bg-primary text-primary-foreground shadow-xl"
-                    : "border border-border bg-card shadow-sm hover:shadow-md"
+                    ? "border-primary shadow-lg ring-2 ring-primary/20 scale-105 sm:scale-100 lg:scale-105 z-10"
+                    : "border-border shadow-sm hover:border-primary/50"
                 }`}
               >
                 {/* Badge */}
                 {plan.badge && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="rounded-full bg-background px-3 py-1 text-xs font-semibold text-foreground shadow-sm">
+                    <Badge variant={plan.highlighted ? "default" : "secondary"} className="shadow-md font-semibold px-3 py-1 text-xs uppercase tracking-wider">
                       {t(plan.badge)}
-                    </span>
+                    </Badge>
                   </div>
                 )}
+                
+                <CardHeader className="text-center pb-4 pt-8">
+                  <CardTitle className={`text-2xl font-bold ${plan.highlighted ? "text-primary" : "text-foreground"}`}>
+                    {t(plan.nameKey)}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col flex-1 pb-6 px-6">
+                  <div className="mb-6 flex items-baseline justify-center gap-1">
+                    <span className="text-5xl font-extrabold tracking-tight text-foreground">
+                      {t(plan.priceKey)}
+                    </span>
+                    <span className="text-sm font-medium text-muted-foreground ml-1">
+                      {t(plan.periodKey)}
+                    </span>
+                  </div>
+                  
+                  <div className="my-6 h-px w-full bg-border/60" />
 
-                {/* Plan Name */}
-                <h3 className={`text-lg font-bold ${plan.highlighted ? "text-primary-foreground" : "text-foreground"}`}>
-                  {t(plan.nameKey)}
-                </h3>
-
-                {/* Price */}
-                <div className="mt-4 flex items-baseline gap-1">
-                  <span className={`text-4xl font-extrabold ${plan.highlighted ? "text-primary-foreground" : "text-foreground"}`}>
-                    {t(plan.priceKey)}
-                  </span>
-                  <span className={`text-sm ${plan.highlighted ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
-                    {t(plan.periodKey)}
-                  </span>
-                </div>
-
-                {/* Divider */}
-                <div className={`my-6 h-px ${plan.highlighted ? "bg-primary-foreground/20" : "bg-border"}`} />
-
-                {/* Features */}
-                <ul className="mb-6 flex flex-1 flex-col gap-3">
-                  {plan.features.map((featureKey) => (
-                    <li key={featureKey} className="flex items-start gap-2 text-sm">
-                      <Check className={`mt-0.5 h-4 w-4 shrink-0 ${plan.highlighted ? "text-primary-foreground" : "text-primary"}`} />
-                      <span className={plan.highlighted ? "text-primary-foreground/95" : "text-foreground"}>
-                        {t(featureKey)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA Button */}
-                <button
-                  onClick={() => handleSelectPlan(plan.id)}
-                  className={`w-full rounded-lg py-2.5 text-sm font-semibold transition-opacity ${
-                    plan.highlighted
-                      ? "bg-background text-primary hover:bg-primary/90"
-                      : "bg-primary text-primary-foreground hover:bg-primary/90"
-                  }`}
-                >
-                  {plan.id === "free" ? t("getStarted") : t("subscribe")}
-                </button>
-              </div>
+                  <ul className="flex flex-1 flex-col gap-4">
+                    {plan.features.map((featureKey) => (
+                      <li key={featureKey} className="flex items-start gap-3 text-sm">
+                        <div className={`rounded-full p-1 mt-0.5 ${plan.highlighted ? "bg-primary/10" : "bg-muted"}`}>
+                          <Check className={`h-3.5 w-3.5 shrink-0 ${plan.highlighted ? "text-primary" : "text-muted-foreground"}`} />
+                        </div>
+                        <span className="text-muted-foreground leading-relaxed">
+                          {t(featureKey)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+                <CardFooter className="px-6 pb-8 pt-2">
+                  <Button
+                    onClick={() => handleSelectPlan(plan.id)}
+                    variant={plan.highlighted ? "default" : "outline"}
+                    className="w-full text-base font-semibold py-6 shadow-sm hover:shadow-md transition-shadow"
+                    size="lg"
+                  >
+                    {plan.id === "free" ? t("getStarted") : t("subscribe")}
+                  </Button>
+                </CardFooter>
+              </Card>
             ))}
           </div>
         </div>
